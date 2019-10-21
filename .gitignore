@@ -2,3 +2,5 @@
 /.venv/
 
 /*.iml
+/error.log
+/markdownnotebook.ini
