@@ -31,10 +31,10 @@ from libs.uix.baseclass.startscreen import StartScreen
 from libs.uix.lists import Lists
 
 from kivymd.theming import ThemeManager
-from kivymd.label import MDLabel
+from kivymd.uix.label import MDLabel
 from kivymd.toast import toast
 
-from dialogs import card
+from libs.applibs.dialogs import card
 
 
 class MarkdownNotebook(App):

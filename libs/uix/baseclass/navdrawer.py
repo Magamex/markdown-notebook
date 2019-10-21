@@ -12,7 +12,7 @@
 
 from kivy.properties import ObjectProperty
 
-from kivymd.navigationdrawer import NavigationLayout
+from kivymd.uix.navigationdrawer import NavigationLayout
 
 
 class NavDrawer(NavigationLayout):

@@ -20,7 +20,6 @@ import traceback
 NICK_NAME_AND_NAME_REPOSITORY = 'REPO_PROJECT'
 
 directory = os.path.split(os.path.abspath(sys.argv[0]))[0]
-sys.path.insert(0, os.path.join(directory, 'libs/applibs'))
 
 try:
     import webbrowser
@@ -37,7 +36,7 @@ try:
     Config.set('kivy', 'log_enable', 0)
 
     from kivymd.theming import ThemeManager
-    from bugreporter import BugReporter
+    from libs.applibs.bugreporter import BugReporter
 except Exception:
     traceback.print_exc(file=open(os.path.join(directory, 'error.log'), 'w'))
     print(traceback.print_exc())
@@ -67,10 +66,12 @@ def main():
 
         app = MarkdownNotebook()
         app.run()
-    except Exception:
+    except Exception as e:
+        if not True:
+            raise e
+
         from kivy.app import App
         from kivy.uix.boxlayout import BoxLayout
-
 
         text_error = traceback.format_exc()
         traceback.print_exc(file=open(os.path.join(directory, 'error.log'), 'w'))
@@ -82,7 +83,7 @@ def main():
                 app = None
 
         def callback_report(*args):
-            '''Функция отправки баг-репорта.'''
+            """Функция отправки баг-репорта"""
 
             try:
                 txt = six.moves.urllib.parse.quote(
@@ -103,7 +104,7 @@ def main():
                 app.screen.clear_widgets()
                 app.screen.add_widget(report)
             except AttributeError:
-            	create_error_monitor()
+                create_error_monitor()
         else:
             create_error_monitor()
 

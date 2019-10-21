@@ -11,9 +11,9 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.properties import ObjectProperty, BooleanProperty, StringProperty
 
 try:
-    from kivymd.button import MDFlatButton
-except:
-	 raise ImportError('Install package KivyMD')
+    from kivymd.uix.button import MDFlatButton
+except Exception:
+    raise ImportError('Install package KivyMD')
 
 
 class BugReporter(FloatLayout):
