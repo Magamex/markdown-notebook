@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-'''
+"""
 VKGroups
 
 Copyright © 2010-2018 HeaTTheatR
@@ -11,7 +11,7 @@ Copyright © 2010-2018 HeaTTheatR
 Данный файл распространяется по условиям той же лицензии,
 что и фреймворк Kivy.
 
-'''
+"""
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder
@@ -129,7 +129,7 @@ def dialog(font_style='Body1', theme_text_color='Secondary', title='Title',
            text='Text', valign='top', dismiss=True, buttons=None,
            use_check=False, text_check='', height=300, size_hint=(.85, None),
            ref_callback=None, check_callback=None):
-    '''Вывод диалоговых окон.'''
+    """Вывод диалоговых окон"""
 
     if buttons is None:
         buttons = []
@@ -176,6 +176,7 @@ def dialog_progress(text_button_cancel='Cancel', text_wait='Wait',
 
     return spinner, spinner.ids.label
 
+
 def input_dialog(title='Title', hint_text='Write something',
                  text_button_ok='OK', text_button_cancel='CANCEL',
                  events_callback=None):
@@ -190,7 +191,7 @@ def input_dialog(title='Title', hint_text='Write something',
 
 
 def card(content, title=None, background_color=None, size=(.7, .5)):
-    '''Вывод диалоговых окон с кастомным контентом.'''
+    """Вывод диалоговых окон с кастомным контентом."""
 
     if not background_color:
         background_color = [1.0, 1.0, 1.0, 1]

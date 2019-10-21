@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-'''
+"""
 VKGroups
 
 Copyright © 2010-2018 HeaTTheatR
@@ -11,7 +11,7 @@ Copyright © 2010-2018 HeaTTheatR
 Данный файл распространяется по условиям той же лицензии,
 что и фреймворк Kivy.
 
-'''
+"""
 
 from kivy.uix.boxlayout import BoxLayout
 from kivy.lang import Builder

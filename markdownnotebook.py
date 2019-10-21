@@ -10,35 +10,30 @@
 # 
 # LICENSE: MIT
 
-import os
 import sys
+
+import os
 from ast import literal_eval
-
 from kivy.app import App
-from kivy.uix.modalview import ModalView
-from kivy.lang import Builder
-from kivy.core.window import Window
-from kivy.config import ConfigParser
-from kivy.logger import PY2
 from kivy.clock import Clock
-from kivy.utils import get_color_from_hex, get_hex_from_color
-from kivy.metrics import dp
+from kivy.config import ConfigParser
+from kivy.core.window import Window
+from kivy.lang import Builder
+from kivy.logger import PY2
 from kivy.properties import ObjectProperty, StringProperty
-
-from main import __version__
-from libs.translation import Translation
-from libs.uix.baseclass.startscreen import StartScreen
-from libs.uix.lists import Lists
-
+from kivy.utils import get_hex_from_color
 from kivymd.theming import ThemeManager
-from kivymd.uix.label import MDLabel
 from kivymd.toast import toast
 
 from libs.applibs.dialogs import card
+from libs.translation import Translation
+from libs.uix.baseclass.startscreen import StartScreen
+from libs.uix.lists import Lists
+from main import __version__
 
 
 class MarkdownNotebook(App):
-    title = 'MarkdownNotebook'
+    title = 'Markdown Notebook'
     icon = 'icon.png'
     nav_drawer = ObjectProperty()
     theme_cls = ThemeManager()
@@ -69,13 +64,13 @@ class MarkdownNotebook(App):
                         '{}/%(appname)s.ini'.format(self.directory))
 
     def build_config(self, config):
-        '''Создаёт файл настроек приложения markdownnotebook.ini.'''
+        """Создаёт файл настроек приложения markdownnotebook.ini"""
 
         config.adddefaultsection('General')
         config.setdefault('General', 'language', 'en')
 
     def set_value_from_config(self):
-        '''Устанавливает значения переменных из файла настроек markdownnotebook.ini.'''
+        """Устанавливает значения переменных из файла настроек markdownnotebook.ini"""
 
         self.config.read(os.path.join(self.directory, 'markdownnotebook.ini'))
         self.lang = self.config.get('General', 'language')
@@ -100,8 +95,8 @@ class MarkdownNotebook(App):
                     Builder.load_file(kv_file)
 
     def events_program(self, instance, keyboard, keycode, text, modifiers):
-        '''Вызывается при нажатии кнопки Меню или Back Key
-        на мобильном устройстве.'''
+        """Вызывается при нажатии кнопки Меню или Back Key
+        на мобильном устройстве."""
 
         if keyboard in (1001, 27):
             if self.nav_drawer.state == 'open':
@@ -113,8 +108,8 @@ class MarkdownNotebook(App):
         return True
 
     def back_screen(self, event=None):
-        '''Менеджер экранов. Вызывается при нажатии Back Key
-        и шеврона "Назад" в ToolBar.'''
+        """Менеджер экранов. Вызывается при нажатии Back Key
+        и шеврона "Назад" в ToolBar."""
 
         # Нажата BackKey.
         if event in (1001, 27):
@@ -205,5 +200,6 @@ class MarkdownNotebook(App):
             
         Clock.schedule_interval(check_interval_press, 1)
         toast(self.translation._('Press Back to Exit'))
+
     def on_lang(self, instance, lang):
         self.translation.switch_lang(lang)
