@@ -41,7 +41,7 @@ class MarkdownNotebook(App):
     lang = StringProperty('en')
 
     def __init__(self, **kvargs):
-        super(MarkdownNotebook, self).__init__(**kvargs)
+        super().__init__(**kvargs)
         Window.bind(on_keyboard=self.events_program)
         Window.soft_input_mode = 'below_target'
 
@@ -60,8 +60,7 @@ class MarkdownNotebook(App):
         )
 
     def get_application_config(self):
-        return super(MarkdownNotebook, self).get_application_config(
-                        '{}/%(appname)s.ini'.format(self.directory))
+        return super().get_application_config('{}/%(appname)s.ini'.format(self.directory))
 
     def build_config(self, config):
         """Создаёт файл настроек приложения markdownnotebook.ini"""
@@ -123,6 +122,10 @@ class MarkdownNotebook(App):
             self.screen.ids.action_bar.title = self.title
             self.screen.ids.action_bar.left_action_items = \
                 [['menu', lambda x: self.nav_drawer._toggle()]]
+
+    def show_notebook(self):
+        self.nav_drawer.toggle_nav_drawer()
+        self.manager.current = 'base'
 
     def show_about(self, *args):
         self.nav_drawer.toggle_nav_drawer()

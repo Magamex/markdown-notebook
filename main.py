@@ -67,7 +67,7 @@ def main():
         app = MarkdownNotebook()
         app.run()
     except Exception as e:
-        if not True:
+        if True:
             raise e
 
         from kivy.app import App

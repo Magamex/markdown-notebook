@@ -4,7 +4,6 @@ from kivy.properties import ListProperty
 
 from kivymd.uix.behaviors import RectangularElevationBehavior
 from kivymd.theming import ThemableBehavior
-from kivymd.vendor.navigationdrawer import NavigationDrawer
 
 
 Builder.load_string("""
