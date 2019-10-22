@@ -1,0 +1,14 @@
+#:import MarkdownLexer pygments.lexers.markup.MarkdownLexer
+
+<BaseScreen>:
+    name: 'base'
+
+    BoxLayout:
+        id: panel
+
+        FloatLayout:
+            id: fm
+
+        CodeInput:
+            id: code_input
+            lexer: MarkdownLexer()
