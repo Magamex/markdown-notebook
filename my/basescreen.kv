@@ -4,11 +4,17 @@
     name: 'base'
 
     BoxLayout:
-        id: panel
 
-        FloatLayout:
-            id: fm
+        ScreenManager:
+            id: manager
 
-        CodeInput:
-            id: code_input
-            lexer: MarkdownLexer()
+            Screen:
+                name: 'fm_screen'
+                FloatLayout:
+                    id: fm
+
+            Screen:
+                name: 'note_editor_screen'
+                CodeInput:
+                    id: note_editor
+                    lexer: MarkdownLexer()

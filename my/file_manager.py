@@ -5,24 +5,24 @@ from kivymd.uix.filemanager import MDFileManager
 
 class FileManager(MDFileManager):
 
-    def __init__(self, code_input, root_path):
+    def __init__(self, root_path, open_note_editor, exit_from_app):
         super().__init__(
             exit_manager=self.exit_manager_call,
             select_path=self.select_path_call,
             previous=False
         )
-        self.code_input = code_input
         self.root_path = root_path
+        self.open_note_editor = open_note_editor
+        self.exit_from_app = exit_from_app
 
     def show_root(self):
         self.show(self.root_path)
 
     def exit_manager_call(self, *args):
-        print('> exit_manager()')
+        self.exit_from_app()
 
     def select_path_call(self, path):
-        with open(path) as f:
-            self.code_input.text = f.read()
+        self.open_note_editor(path)
 
     def select_dir_or_file(self, path):
         if os.path.isfile(path):

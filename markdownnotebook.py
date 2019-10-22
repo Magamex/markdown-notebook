@@ -77,9 +77,10 @@ class MarkdownNotebook(App):
     def build(self):
         self.set_value_from_config()
         self.load_all_kv_files(os.path.join(self.directory, 'libs', 'uix', 'kv'))
-        self.screen = StartScreen()  # главный экран программы
+        self.screen = StartScreen()
         self.manager = self.screen.ids.manager
         self.nav_drawer = self.screen.ids.nav_drawer
+        self.screen.ids.base.init(self)
 
         return self.screen
 
@@ -123,7 +124,7 @@ class MarkdownNotebook(App):
             self.screen.ids.action_bar.left_action_items = \
                 [['menu', lambda x: self.nav_drawer._toggle()]]
 
-    def show_notebook(self):
+    def show_notebook(self, *args):
         self.nav_drawer.toggle_nav_drawer()
         self.manager.current = 'base'
 
@@ -164,11 +165,11 @@ class MarkdownNotebook(App):
             self.translation._('MIT LICENSE')
 
     def select_locale(self, *args):
-        '''Выводит окно со списком имеющихся языковых локализаций для
-        установки языка приложения.'''
+        """Выводит окно со списком имеющихся языковых локализаций для
+        установки языка приложения."""
 
         def select_locale(name_locale):
-            '''Устанавливает выбранную локализацию.'''
+            """Устанавливает выбранную локализацию."""
 
             for locale in self.dict_language.keys():
                 if name_locale == self.dict_language[locale]:
