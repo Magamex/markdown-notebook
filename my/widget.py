@@ -1,4 +1,5 @@
 import os
+from kivy.uix.treeview import TreeViewLabel
 
 from kivymd.uix.filemanager import MDFileManager
 
@@ -33,3 +34,8 @@ class FileManager(MDFileManager):
         self.exit_from_app()
 
 
+class NoteTreeViewLabel(TreeViewLabel):
+
+    def __init__(self, note, **kwargs):
+        super().__init__(text=note.text, **kwargs)
+        self.note = note

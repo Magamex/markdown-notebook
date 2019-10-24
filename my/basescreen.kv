@@ -2,6 +2,7 @@
 
 <BaseScreen>:
     note_tree: note_tree
+    note_editor: note_editor
     name: 'base'
 
     BoxLayout:
@@ -27,9 +28,13 @@
                         hide_root: True
                         indent_level: 10
                         size_hint_y: None
+                        select_node: root._select_note_heading
 
             Screen:
                 name: 'note_editor_screen'
-                CodeInput:
-                    id: note_editor
-                    lexer: MarkdownLexer()
+                ScrollView:
+                    do_scroll_x: False
+                    CodeInput:
+                        id: note_editor
+                        lexer: MarkdownLexer()
+                        size_hint_y: None
