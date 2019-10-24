@@ -4,7 +4,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.treeview import TreeViewLabel
 from markdown_tree_parser.parser import parse_file
 
-from my.file_manager import FileManager
+from my.widget import FileManager
 
 
 class BaseScreen(Screen):
