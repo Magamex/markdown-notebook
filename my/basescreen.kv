@@ -1,10 +1,10 @@
 #:import MarkdownLexer pygments.lexers.markup.MarkdownLexer
 
 <BaseScreen>:
+    note_tree: note_tree
     name: 'base'
 
     BoxLayout:
-
         ScreenManager:
             id: manager
 
@@ -12,6 +12,21 @@
                 name: 'fm_screen'
                 FloatLayout:
                     id: fm
+
+            Screen:
+                name: 'note_tree_screen'
+                canvas.before:
+                    Color:
+                        rgba: 0, 0, 0, 1
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+                ScrollView:
+                    TreeView:
+                        id: note_tree
+                        hide_root: True
+                        indent_level: 10
+                        size_hint_y: None
 
             Screen:
                 name: 'note_editor_screen'
