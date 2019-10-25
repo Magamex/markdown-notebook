@@ -71,7 +71,7 @@ class BaseScreen(Screen):
         self._set_back_button()
 
     def _open_note_editor(self):
-        self.note_editor.text = self.note_viewer.text
+        self.note_editor.text = self._current_note.source
         self.note_editor.cursor = (0, 0)
         self.ids.manager.current = 'note_editor_screen'
         self._set_back_button(action=self._confirm_save_note)
@@ -98,16 +98,22 @@ class BaseScreen(Screen):
             raise Exception('Not support screen')
 
     def _confirm_save_note(self):
-        if self.note_editor.text != self._current_note.full_source:
-            MDDialog(
-                title='Confirm save', size_hint=(.8, .3), text_button_ok='Yes',
-                text=f'Do you want to save {self._current_note_file_name}',
-                text_button_cancel='No',
-                events_callback=self._confirm_save_note_callback
-            ).open()
+        if self.note_editor.text == self._current_note.source:
+            self._back_screen()
+            return
+
+        MDDialog(
+            title='Confirm save',
+            size_hint=(0.8, 0.3),
+            text_button_ok='Yes',
+            text_button_cancel='No',
+            text=f'Do you want to save {self._current_note_file_name}',
+            events_callback=self._confirm_save_note_callback
+        ).open()
 
     def _confirm_save_note_callback(self, answer, _):
         if answer == 'Yes':
+            self._current_note.source = self.note_editor.text
             with open(self._current_note_file_path, 'w') as f:
                 f.write(self._current_note.root.full_source)
                 self._back_screen()
