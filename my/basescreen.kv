@@ -2,6 +2,7 @@
 
 <BaseScreen>:
     note_tree: note_tree
+    note_viewer: note_viewer
     note_editor: note_editor
     name: 'base'
 
@@ -29,6 +30,17 @@
                         indent_level: 10
                         size_hint_y: None
                         select_node: root._select_note_heading
+
+            Screen:
+                name: 'note_viewer_screen'
+                RstDocument:
+                    id: note_viewer
+                MDFloatingActionButton:
+                    icon: 'file-document-edit-outline'
+                    md_bg_color: app.theme_cls.primary_color
+                    x: Window.width - self.width - dp(10)
+                    y: dp(10)
+                    on_release: root._open_note_editor()
 
             Screen:
                 name: 'note_editor_screen'
