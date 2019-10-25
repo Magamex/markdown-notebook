@@ -14,6 +14,7 @@ class BaseScreen(Screen):
 
     note_tree = ObjectProperty()
     note_viewer = ObjectProperty()
+    note_title = ObjectProperty()
     note_editor = ObjectProperty()
 
     def init(self, app):
@@ -71,6 +72,7 @@ class BaseScreen(Screen):
         self._set_back_button()
 
     def _open_note_editor(self):
+        self.note_title.text = self._current_note.text
         self.note_editor.text = self._current_note.source
         self.note_editor.cursor = (0, 0)
         self.ids.manager.current = 'note_editor_screen'
@@ -98,7 +100,8 @@ class BaseScreen(Screen):
             raise Exception('Not support screen')
 
     def _confirm_save_note(self):
-        if self.note_editor.text == self._current_note.source:
+        if self.note_title.text == self._current_note.text \
+                and self.note_editor.text == self._current_note.source:
             self._back_screen()
             return
 
@@ -113,6 +116,7 @@ class BaseScreen(Screen):
 
     def _confirm_save_note_callback(self, answer, _):
         if answer == 'Yes':
+            self._current_note.text = self.note_title.text
             self._current_note.source = self.note_editor.text
             with open(self._current_note_file_path, 'w') as f:
                 f.write(self._current_note.root.full_source)

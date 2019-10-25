@@ -3,6 +3,7 @@
 <BaseScreen>:
     note_tree: note_tree
     note_viewer: note_viewer
+    note_title: note_title
     note_editor: note_editor
     name: 'base'
 
@@ -44,9 +45,14 @@
 
             Screen:
                 name: 'note_editor_screen'
-                ScrollView:
-                    do_scroll_x: False
-                    CodeInput:
-                        id: note_editor
-                        lexer: MarkdownLexer()
-                        size_hint_y: None
+                BoxLayout:
+                    orientation: 'vertical'
+                    MDTextField:
+                        id: note_title
+                        hint_text: 'Heading text'
+                    ScrollView:
+                        do_scroll_x: False
+                        CodeInput:
+                            id: note_editor
+                            lexer: MarkdownLexer()
+                            size_hint_y: None
