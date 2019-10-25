@@ -33,6 +33,9 @@ class FileManager(MDFileManager):
     def exit_manager(self, _):
         self.exit_from_app()
 
+    def refresh(self):
+        self.show(self.current_path)
+
 
 class NoteTreeViewLabel(TreeViewLabel):
 

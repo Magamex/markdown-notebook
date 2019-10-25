@@ -93,6 +93,7 @@ class BaseScreen(Screen):
             self._open_note_tree(self._current_note_file_path)
         elif manager.current == 'note_tree_screen':
             manager.current = 'fm_screen'
+            self.file_manager.refresh()
             self.main_screen.ids.action_bar.left_action_items = [
                 ['menu', lambda x: self.main_screen.ids.nav_drawer._toggle()]
             ]
