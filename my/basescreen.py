@@ -39,7 +39,7 @@ class BaseScreen(Screen):
 
     def _open_note_tree(self, note_file_path):
         self._current_note_file_path = note_file_path
-        self._current_note_file_name = os.path.dirname(note_file_path)
+        self._current_note_file_name = os.path.basename(note_file_path)
         self._fill_tree_view(note_file_path)
         self.ids.manager.current = 'note_tree_screen'
         self._set_back_button()
@@ -64,10 +64,10 @@ class BaseScreen(Screen):
 
     def _select_note_heading(self, node):
         self._current_note = node.note
-        self._open_note_viewer(node.note.full_source)
+        self._open_note_viewer()
 
-    def _open_note_viewer(self, text):
-        self.note_viewer.text = text
+    def _open_note_viewer(self):
+        self.note_viewer.text = self._current_note.full_source
         self.ids.manager.current = 'note_viewer_screen'
         self._set_back_button()
 
@@ -88,9 +88,9 @@ class BaseScreen(Screen):
     def _back_screen(self):
         manager = self.ids.manager
         if manager.current == 'note_editor_screen':
-            manager.current = 'note_viewer_screen'
+            self._open_note_viewer()
         elif manager.current == 'note_viewer_screen':
-            manager.current = 'note_tree_screen'
+            self._open_note_tree(self._current_note_file_path)
         elif manager.current == 'note_tree_screen':
             manager.current = 'fm_screen'
             self.main_screen.ids.action_bar.left_action_items = [
@@ -110,7 +110,7 @@ class BaseScreen(Screen):
             size_hint=(0.8, 0.3),
             text_button_ok='Yes',
             text_button_cancel='No',
-            text=f'Do you want to save {self._current_note_file_name}',
+            text=f'Do you want to save "{self._current_note_file_name}"',
             events_callback=self._confirm_save_note_callback
         ).open()
 
