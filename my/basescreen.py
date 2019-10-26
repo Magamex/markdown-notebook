@@ -23,7 +23,7 @@ class BaseScreen(Screen):
         self._create_file_manager()
         self.note_tree.bind(minimum_height=self.note_tree.setter('height'))
         self.note_editor.bind(minimum_height=self.note_editor.setter('height'))
-        if True:
+        if not True:
             self._open_note_tree('/home/phpusr/notes/knowledge-base/linux.md')
             self._select_note_heading(list(self.note_tree.iterate_all_nodes())[4])
             self._open_note_editor()
@@ -51,7 +51,8 @@ class BaseScreen(Screen):
 
     def _populate_tree_view(self, node, parent=None):
         if parent is None:
-            tree_node = self.note_tree.add_node(NoteTreeViewLabel(node.main, is_open=True))
+            if node.main is not None:
+                tree_node = self.note_tree.add_node(NoteTreeViewLabel(node.main, is_open=True))
         else:
             tree_node = self.note_tree.add_node(NoteTreeViewLabel(node, is_open=False), parent)
 
