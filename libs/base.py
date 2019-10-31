@@ -10,7 +10,7 @@ from kivymd.theming import ThemeManager
 from kivymd.toast import toast
 
 # from main import __version__ as app_version
-from uix.startscreen import StartScreen
+from uix.start_screen import StartScreen
 
 
 class BaseApp(App):

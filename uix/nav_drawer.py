@@ -5,7 +5,7 @@ from kivymd.uix.navigationdrawer import NavigationLayout
 
 
 class NavDrawer(NavigationLayout):
-    Builder.load_file("uix/kv/navdrawer.kv")
+    Builder.load_file("uix/kv/nav_drawer.kv")
 
     _app = ObjectProperty()
 
