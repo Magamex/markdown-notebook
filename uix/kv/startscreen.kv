@@ -1,7 +1,7 @@
 #:import MDToolbar kivymd.uix.toolbar.MDToolbar
 #:import NavDrawer uix.navdrawer.NavDrawer
-#:import BaseScreen uix.basescreen.BaseScreen
-#:import About uix.about.About
+#:import AboutScreen uix.about_screen.AboutScreen
+#:import MarkdownLexer pygments.lexers.markup.MarkdownLexer
 
 <StartScreen>
     orientation: 'vertical'
@@ -24,9 +24,52 @@
             ScreenManager:
                 id: manager
 
-                BaseScreen:
-                    id: base
+                Screen:
+                    name: 'fm_screen'
+                    FloatLayout:
+                        id: fm
 
-                About:
-                    id: about
+                Screen:
+                    name: 'note_tree_screen'
+                    canvas.before:
+                        Color:
+                            rgba: 0, 0, 0, 1
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                    ScrollView:
+                        TreeView:
+                            id: note_tree
+                            hide_root: True
+                            indent_level: 10
+                            size_hint_y: None
+                            select_node: app._select_note_heading
 
+                Screen:
+                    name: 'note_viewer_screen'
+                    RstDocument:
+                        id: note_viewer
+                    MDFloatingActionButton:
+                        icon: 'file-document-edit-outline'
+                        md_bg_color: app.theme_cls.primary_color
+                        x: Window.width - self.width - dp(10)
+                        y: dp(10)
+                        on_release: app._open_note_editor()
+
+                Screen:
+                    name: 'note_editor_screen'
+                    BoxLayout:
+                        orientation: 'vertical'
+                        MDTextField:
+                            id: note_title
+                            hint_text: 'Heading text'
+                        ScrollView:
+                            do_scroll_x: False
+                            CodeInput:
+                                id: note_editor
+                                lexer: MarkdownLexer()
+                                size_hint_y: None
+
+                AboutScreen:
+                    id: about_screen
+                    name: 'about_screen'

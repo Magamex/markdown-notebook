@@ -5,13 +5,14 @@ from kivy.uix.screenmanager import Screen
 from kivy.utils import get_hex_from_color
 
 
-class About(Screen):
-    Builder.load_file("uix/kv/about.kv")
+class AboutScreen(Screen):
+    Builder.load_file("uix/kv/about_screen.kv")
 
     def init(self, version, link_color):
         link_color = get_hex_from_color(link_color)
         author_site = 'https://github.com/phpusr'
         project_repo = 'https://github.com/phpusr/markdown-notebook'
+
         self.ids.label.text = f'''
         [size=20][b]Markdown Notebook[/b][/size]\n\n
         [b]Version:[/b] {version}\n

@@ -9,6 +9,9 @@ from kivy.properties import ObjectProperty
 from kivymd.theming import ThemeManager
 from kivymd.toast import toast
 
+# from main import __version__ as app_version
+from uix.startscreen import StartScreen
+
 
 class BaseApp(App):
     icon = 'icon.png'
@@ -16,16 +19,32 @@ class BaseApp(App):
     theme_cls = ThemeManager()
     theme_cls.primary_palette = 'Blue'
 
-    def __init__(self, **kvargs):
+    def __init__(self, base_screen_name, **kvargs):
         super().__init__(**kvargs)
         Window.bind(on_keyboard=self.events_program)
         Window.soft_input_mode = 'below_target'
 
-        self.list_previous_screens = ['base']
+        self.base_screen_name = base_screen_name
+        self.list_previous_screens = [base_screen_name]
         self.window = Window
         self.config = ConfigParser()
         self.manager = None
         self.exit_interval = False
+
+    def build(self):
+        self.screen = StartScreen()
+        self.manager = self.screen.ids.manager
+        self.nav_drawer = self.screen.ids.nav_drawer
+        # TODO fix it
+        # self.screen.ids.about_screen.init(app_version, self.theme_cls.primary_color)
+
+        return self.screen
+
+    def show_about(self, *args):
+        self.nav_drawer.toggle_nav_drawer()
+        self.manager.current = 'about_screen'
+        self.screen.ids.action_bar.left_action_items = \
+            [['chevron-left', lambda x: self.back_screen()]]
 
     def get_application_config(self, defaultpath=''):
         return super().get_application_config(f'{self.directory}/%(appname)s.ini')
@@ -57,13 +76,13 @@ class BaseApp(App):
         """Менеджер экранов. Вызывается при нажатии Back Key
         и шеврона "Назад" в ToolBar."""
 
-        if self.manager.current == 'base':
+        if self.manager.current == self.base_screen_name:
             self.dialog_exit()
             return
         try:
             self.manager.current = self.list_previous_screens.pop()
         except:
-            self.manager.current = 'base'
+            self.manager.current = self.base_screen_name
         self.screen.ids.action_bar.title = self.title
         self.screen.ids.action_bar.left_action_items = \
             [['menu', lambda x: self.nav_drawer._toggle()]]
