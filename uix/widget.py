@@ -6,11 +6,11 @@ from kivymd.uix.filemanager import MDFileManager
 
 class FileManager(MDFileManager):
 
-    def __init__(self, root_path, select_file_callback, exit_from_app):
+    def __init__(self, root_path, select_file_callback, exit_manager_callback):
         super().__init__(previous=False)
         self.root_path = root_path
         self.select_file_callback = select_file_callback
-        self.exit_from_app = exit_from_app
+        self.exit_manager_callback = exit_manager_callback
 
     def show_root(self):
         self.show(self.root_path)
@@ -31,7 +31,7 @@ class FileManager(MDFileManager):
             super().back()
 
     def exit_manager(self, _):
-        self.exit_from_app()
+        self.exit_manager_callback()
 
     def refresh(self):
         self.show(self.current_path)

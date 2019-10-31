@@ -1,3 +1,5 @@
+import sys
+
 import os
 from kivy.properties import ObjectProperty
 from kivymd.uix.dialog import MDDialog
@@ -40,7 +42,7 @@ class MarkdownNotebook(BaseApp):
         self.file_manager = FileManager(
             root_path='/home/phpusr/notes',
             select_file_callback=self._open_note_tree,
-            exit_from_app=self._exit_from_app
+            exit_manager_callback=lambda: sys.exit(0)
         )
         self.screen.ids['fm'].add_widget(self.file_manager)
         self.file_manager.show_root()
@@ -133,6 +135,3 @@ class MarkdownNotebook(BaseApp):
                 self.back_screen()
         elif answer == 'No':
             self.back_screen()
-
-    def _exit_from_app(self):
-        self.dialog_exit()
