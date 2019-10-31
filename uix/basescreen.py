@@ -5,12 +5,12 @@ from kivy.uix.screenmanager import Screen
 from kivymd.uix.dialog import MDDialog
 from markdown_tree_parser.parser import parse_file
 
-from my.widget import FileManager, NoteTreeViewLabel
+from uix.widget import FileManager, NoteTreeViewLabel
 
 
 class BaseScreen(Screen):
 
-    Builder.load_file("my/basescreen.kv")
+    Builder.load_file("uix/kv/basescreen.kv")
 
     note_tree = ObjectProperty()
     note_viewer = ObjectProperty()

@@ -9,8 +9,8 @@ from kivy.properties import ObjectProperty
 from kivymd.theming import ThemeManager
 from kivymd.toast import toast
 
-from libs.uix.baseclass.startscreen import StartScreen
 from main import __version__ as app_version
+from uix.startscreen import StartScreen
 
 
 class MarkdownNotebook(App):

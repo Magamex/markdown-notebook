@@ -1,10 +1,8 @@
-from kivy.uix.boxlayout import BoxLayout
 from kivy.lang.builder import Builder
 from kivy.properties import ListProperty
-
-from kivymd.uix.behaviors import RectangularElevationBehavior
+from kivy.uix.boxlayout import BoxLayout
 from kivymd.theming import ThemableBehavior
-
+from kivymd.uix.behaviors import RectangularElevationBehavior
 
 Builder.load_string("""
 #:import Window kivy.core.window.Window

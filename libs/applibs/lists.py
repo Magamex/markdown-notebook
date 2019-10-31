@@ -16,16 +16,13 @@ Copyright © 2016  Easy
 # TODO: добавить документацию.
 
 import os
-
-from kivy.uix.image import Image, AsyncImage
 from kivy.lang import Builder
-from kivy.uix.behaviors import ButtonBehavior
-from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import (
     ObjectProperty, DictProperty, StringProperty, BooleanProperty, ListProperty
 )
-
-from kivymd.uix.selectioncontrol import MDCheckbox
+from kivy.uix.behaviors import ButtonBehavior
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.image import Image, AsyncImage
 from kivymd.uix.behaviors import CircularRippleBehavior
 from kivymd.uix.button import MDIconButton
 from kivymd.uix.list import (
@@ -33,6 +30,7 @@ from kivymd.uix.list import (
     OneLineListItem, OneLineIconListItem, ThreeLineAvatarIconListItem,
     OneLineAvatarIconListItem
 )
+from kivymd.uix.selectioncontrol import MDCheckbox
 
 
 class LeftMDIcon(ILeftBodyTouch, MDIconButton):

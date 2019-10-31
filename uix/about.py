@@ -6,7 +6,7 @@ from kivy.utils import get_hex_from_color
 
 
 class About(Screen):
-    Builder.load_file("libs/uix/baseclass/about.kv")
+    Builder.load_file("uix/kv/about.kv")
 
     def init(self, version, link_color):
         link_color = get_hex_from_color(link_color)
