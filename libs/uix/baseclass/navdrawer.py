@@ -1,21 +1,12 @@
-# -*- coding: utf-8 -*-
-#
-# This file created with KivyCreatorProject
-# <https://github.com/HeaTTheatR/KivyCreatorProgect
-#
-# Copyright © 2017 Easy
-#
-# For suggestions and questions:
-# <kivydevelopment@gmail.com>
-# 
-# LICENSE: MIT
-
+from kivy.lang import Builder
 from kivy.properties import ObjectProperty
 
 from kivymd.uix.navigationdrawer import NavigationLayout
 
 
 class NavDrawer(NavigationLayout):
+    Builder.load_file("libs/uix/baseclass/navdrawer.kv")
+
     _app = ObjectProperty()
 
     def _toggle(self):
