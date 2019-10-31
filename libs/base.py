@@ -9,7 +9,7 @@ from kivy.properties import ObjectProperty
 from kivymd.theming import ThemeManager
 from kivymd.toast import toast
 
-# from main import __version__ as app_version
+from main import __version__ as app_version
 from uix.start_screen import StartScreen
 
 
@@ -35,8 +35,7 @@ class BaseApp(App):
         self.screen = StartScreen()
         self.manager = self.screen.ids.manager
         self.nav_drawer = self.screen.ids.nav_drawer
-        # TODO fix it
-        # self.screen.ids.about_screen.init(app_version, self.theme_cls.primary_color)
+        self.screen.ids.about_screen.init(app_version, self.theme_cls.primary_color)
 
         return self.screen
 
