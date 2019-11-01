@@ -2,20 +2,26 @@ import sys
 
 import os
 from kivy.properties import ObjectProperty
+from kivymd.toast import toast
 from kivymd.uix.dialog import MDDialog
 from markdown_tree_parser.parser import parse_file
 
 from libs.base import BaseApp
-from uix.widget import FileManager, NoteTreeViewLabel
+from uix.widget import FileManager, NoteTreeViewLabel, NotebooksSelectorModalView
 
 
 class MarkdownNotebook(BaseApp):
     title = 'Markdown Notebook'
 
+    notebooks_selector = NotebooksSelectorModalView()
     note_tree = ObjectProperty()
     note_viewer = ObjectProperty()
     note_title = ObjectProperty()
     note_editor = ObjectProperty()
+
+    @property
+    def name(self):
+        return 'markdown_notebook'
 
     def __init__(self):
         super().__init__('fm_screen')
@@ -27,7 +33,8 @@ class MarkdownNotebook(BaseApp):
         self.note_title = self.screen.ids.note_title
         self.note_editor = self.screen.ids.note_editor
 
-        self._create_file_manager()
+        self.notebooks_selector.build(add_notebook=self._add_notebook)
+        self._build_file_manager()
         self.note_tree.bind(minimum_height=self.note_tree.setter('height'))
         self.note_editor.bind(minimum_height=self.note_editor.setter('height'))
 
@@ -38,7 +45,7 @@ class MarkdownNotebook(BaseApp):
 
         return self.screen
 
-    def _create_file_manager(self):
+    def _build_file_manager(self):
         self.file_manager = FileManager(
             root_path='/home/phpusr/notes',
             select_file_callback=self._open_note_tree,
@@ -46,6 +53,17 @@ class MarkdownNotebook(BaseApp):
         )
         self.screen.ids['fm'].add_widget(self.file_manager)
         self.file_manager.show_root()
+
+    def _add_notebook(self, path):
+        paths_str = self.config.getdefault('General', 'notebooks', '')
+        paths = paths_str.split(',') if paths_str != '' else []
+        if path in paths:
+            toast('Notebook already added')
+            return
+
+        paths.append(path)
+        self.config.set('General', 'notebooks', ','.join(paths))
+        self.config.write()
 
     def _open_note_tree(self, note_file_path):
         self._current_note_file_path = note_file_path

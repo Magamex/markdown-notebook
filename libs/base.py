@@ -35,7 +35,7 @@ class BaseApp(App):
         self.screen = StartScreen()
         self.manager = self.screen.ids.manager
         self.nav_drawer = self.screen.ids.nav_drawer
-        self.screen.ids.about_screen.init(app_version, self.theme_cls.primary_color)
+        self.screen.ids.about_screen.build(app_version, self.theme_cls.primary_color)
 
         return self.screen
 
@@ -45,18 +45,11 @@ class BaseApp(App):
         self.screen.ids.action_bar.left_action_items = \
             [['chevron-left', lambda x: self.back_screen()]]
 
-    def get_application_config(self, defaultpath=''):
-        return super().get_application_config(f'{self.directory}/%(appname)s.ini')
+    def get_application_config(self, defaultpath=None):
+        return super().get_application_config(os.path.join(self.directory, f'{self.name}.ini'))
 
     def build_config(self, config):
-        """Создаёт файл настроек приложения markdown_notebook.ini"""
-
         config.adddefaultsection('General')
-
-    def set_value_from_config(self):
-        """Устанавливает значения переменных из файла настроек markdown_notebook.ini"""
-
-        self.config.read(os.path.join(self.directory, 'markdown_notebook.ini'))
 
     def events_program(self, instance, keyboard, keycode, text, modifiers):
         """Вызывается при нажатии кнопки Меню или Back Key

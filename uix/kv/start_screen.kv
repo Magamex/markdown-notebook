@@ -26,6 +26,20 @@
                 id: manager
 
                 Screen:
+                    name: 'notebooks_screen'
+
+                    MDList:
+                        id: notebook_list
+
+                    MDFloatingActionButton:
+                        icon: 'plus'
+                        md_bg_color: app.theme_cls.primary_color
+                        x: Window.width - self.width - dp(10)
+                        y: dp(10)
+                        on_release: app.notebooks_selector.open()
+
+
+                Screen:
                     name: 'fm_screen'
                     FloatLayout:
                         id: fm

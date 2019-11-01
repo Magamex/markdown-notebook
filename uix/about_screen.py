@@ -8,7 +8,7 @@ from kivy.utils import get_hex_from_color
 class AboutScreen(Screen):
     Builder.load_file("uix/kv/about_screen.kv")
 
-    def init(self, version, link_color):
+    def build(self, version, link_color):
         link_color = get_hex_from_color(link_color)
         author_site = 'https://github.com/phpusr'
         project_repo = 'https://github.com/phpusr/markdown-notebook'
