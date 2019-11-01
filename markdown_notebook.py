@@ -4,11 +4,10 @@ import os
 from kivy.properties import ObjectProperty
 from kivymd.toast import toast
 from kivymd.uix.dialog import MDDialog
-from kivymd.uix.list import TwoLineListItem
 from markdown_tree_parser.parser import parse_file
 
 from libs.base import BaseApp
-from uix.widget import FileManager, NoteTreeViewLabel, NotebooksSelectorModalView
+from uix.widget import FileManager, NoteTreeViewLabel, NotebooksSelectorModalView, NotebookListItem
 
 
 class MarkdownNotebook(BaseApp):
@@ -34,7 +33,7 @@ class MarkdownNotebook(BaseApp):
         self.note_title = self.screen.ids.note_title
         self.note_editor = self.screen.ids.note_editor
 
-        self.notebooks_selector.build(add_notebook=self._add_notebook)
+        self.notebooks_selector.build(add_notebook=self._add_new_notebook)
         self._build_file_manager()
         self.note_tree.bind(minimum_height=self.note_tree.setter('height'))
         self.note_editor.bind(minimum_height=self.note_editor.setter('height'))
@@ -52,11 +51,25 @@ class MarkdownNotebook(BaseApp):
         paths_str = self.config.getdefault('General', 'notebooks', '')
         paths = paths_str.split(',') if paths_str != '' else []
         for path in paths:
-            self._add_notebook_to_notebook_list(path)
+            self._add_notebook_to_list(path)
 
-    def _add_notebook_to_notebook_list(self, path):
+    def _add_notebook_to_list(self, path):
         notebook_name = os.path.basename(path)
-        self.screen.ids.notebook_list.add_widget(TwoLineListItem(text=notebook_name, secondary_text=path))
+        self.screen.ids.notebook_list.add_widget(NotebookListItem(
+            text=notebook_name,
+            secondary_text=path,
+            remove_item_callback=self._remove_notebook
+        ))
+
+    def _remove_notebook(self, widget, path):
+        print('remove:', path, widget)
+        paths_str = self.config.getdefault('General', 'notebooks', '')
+        paths = paths_str.split(';') if paths_str != '' else []
+        if path in paths:
+            paths.remove(path)
+            self.config.set('General', 'notebooks', ';'.join(paths))
+            self.config.write()
+        self.screen.ids.notebook_list.remove_widget(widget)
 
     def _build_file_manager(self):
         self.file_manager = FileManager(
@@ -67,17 +80,17 @@ class MarkdownNotebook(BaseApp):
         self.screen.ids['fm'].add_widget(self.file_manager)
         self.file_manager.show_root()
 
-    def _add_notebook(self, path):
+    def _add_new_notebook(self, path):
         paths_str = self.config.getdefault('General', 'notebooks', '')
-        paths = paths_str.split(',') if paths_str != '' else []
+        paths = paths_str.split(';') if paths_str != '' else []
         if path in paths:
             toast('Notebook already added')
             return
 
         paths.append(path)
-        self.config.set('General', 'notebooks', ','.join(paths))
+        self.config.set('General', 'notebooks', ';'.join(paths))
         self.config.write()
-        self._add_notebook_to_notebook_list(path)
+        self._add_notebook_to_list(path)
 
     def _open_note_tree(self, note_file_path):
         self._current_note_file_path = note_file_path
@@ -158,7 +171,7 @@ class MarkdownNotebook(BaseApp):
             events_callback=self._confirm_save_note_callback
         ).open()
 
-    def _confirm_save_note_callback(self, answer, _):
+    def _confirm_save_note_callback(self, answer, dialog):
         if answer == 'Yes':
             self._current_note.text = self.note_title.text
             self._current_note.source = self.note_editor.text
