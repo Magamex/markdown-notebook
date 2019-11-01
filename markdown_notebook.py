@@ -4,6 +4,7 @@ import os
 from kivy.properties import ObjectProperty
 from kivymd.toast import toast
 from kivymd.uix.dialog import MDDialog
+from kivymd.uix.list import TwoLineListItem
 from markdown_tree_parser.parser import parse_file
 
 from libs.base import BaseApp
@@ -38,12 +39,24 @@ class MarkdownNotebook(BaseApp):
         self.note_tree.bind(minimum_height=self.note_tree.setter('height'))
         self.note_editor.bind(minimum_height=self.note_editor.setter('height'))
 
+        self._fill_notebooks_from_config()
+
         # TODO temp
         if not True:
             self._select_note_heading(list(self.note_tree.iterate_all_nodes())[4])
             self._open_note_editor()
 
         return self.screen
+
+    def _fill_notebooks_from_config(self):
+        paths_str = self.config.getdefault('General', 'notebooks', '')
+        paths = paths_str.split(',') if paths_str != '' else []
+        for path in paths:
+            self._add_notebook_to_notebook_list(path)
+
+    def _add_notebook_to_notebook_list(self, path):
+        notebook_name = os.path.basename(path)
+        self.screen.ids.notebook_list.add_widget(TwoLineListItem(text=notebook_name, secondary_text=path))
 
     def _build_file_manager(self):
         self.file_manager = FileManager(
@@ -64,6 +77,7 @@ class MarkdownNotebook(BaseApp):
         paths.append(path)
         self.config.set('General', 'notebooks', ','.join(paths))
         self.config.write()
+        self._add_notebook_to_notebook_list(path)
 
     def _open_note_tree(self, note_file_path):
         self._current_note_file_path = note_file_path
