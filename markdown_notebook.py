@@ -7,6 +7,8 @@ from kivymd.uix.dialog import MDDialog
 from markdown_tree_parser.parser import parse_file
 
 from libs.base import BaseApp
+from libs.config import MarkdownNotebookConfig
+from libs.error import MessageError
 from uix.widget import FileManager, NoteTreeViewLabel, NotebooksSelectorModalView, NotebookListItem
 
 
@@ -28,6 +30,7 @@ class MarkdownNotebook(BaseApp):
 
     def build(self):
         super().build()
+        self.custom_config = MarkdownNotebookConfig(self.config)
         self.note_tree = self.screen.ids.note_tree
         self.note_viewer = self.screen.ids.note_viewer
         self.note_title = self.screen.ids.note_title
@@ -48,8 +51,7 @@ class MarkdownNotebook(BaseApp):
         return self.screen
 
     def _fill_notebooks_from_config(self):
-        paths_str = self.config.getdefault('General', 'notebooks', '')
-        paths = paths_str.split(',') if paths_str != '' else []
+        paths = self.custom_config.notebook_paths
         for path in paths:
             self._add_notebook_to_list(path)
 
@@ -62,13 +64,7 @@ class MarkdownNotebook(BaseApp):
         ))
 
     def _remove_notebook(self, widget, path):
-        print('remove:', path, widget)
-        paths_str = self.config.getdefault('General', 'notebooks', '')
-        paths = paths_str.split(';') if paths_str != '' else []
-        if path in paths:
-            paths.remove(path)
-            self.config.set('General', 'notebooks', ';'.join(paths))
-            self.config.write()
+        self.custom_config.remove_notebook_path(path)
         self.screen.ids.notebook_list.remove_widget(widget)
 
     def _build_file_manager(self):
@@ -81,16 +77,11 @@ class MarkdownNotebook(BaseApp):
         self.file_manager.show_root()
 
     def _add_new_notebook(self, path):
-        paths_str = self.config.getdefault('General', 'notebooks', '')
-        paths = paths_str.split(';') if paths_str != '' else []
-        if path in paths:
-            toast('Notebook already added')
-            return
-
-        paths.append(path)
-        self.config.set('General', 'notebooks', ';'.join(paths))
-        self.config.write()
-        self._add_notebook_to_list(path)
+        try:
+            self.custom_config.add_notebook_path(path)
+            self._add_notebook_to_list(path)
+        except MessageError as e:
+            toast(e.message)
 
     def _open_note_tree(self, note_file_path):
         self._current_note_file_path = note_file_path
