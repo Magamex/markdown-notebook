@@ -28,9 +28,12 @@ class MarkdownNotebook(BaseApp):
     def __init__(self):
         super().__init__('fm_screen')
 
+    def build_config(self, config):
+        config.adddefaultsection('General')
+        self.config = MarkdownNotebookConfig(self.config)
+
     def build(self):
         super().build()
-        self.custom_config = MarkdownNotebookConfig(self.config)
         self.note_tree = self.screen.ids.note_tree
         self.note_viewer = self.screen.ids.note_viewer
         self.note_title = self.screen.ids.note_title
@@ -51,7 +54,7 @@ class MarkdownNotebook(BaseApp):
         return self.screen
 
     def _fill_notebooks_from_config(self):
-        paths = self.custom_config.notebook_paths
+        paths = self.config.notebook_paths
         for path in paths:
             self._add_notebook_to_list(path)
 
@@ -64,7 +67,7 @@ class MarkdownNotebook(BaseApp):
         ))
 
     def _remove_notebook(self, widget, path):
-        self.custom_config.remove_notebook_path(path)
+        self.config.remove_notebook_path(path)
         self.screen.ids.notebook_list.remove_widget(widget)
 
     def _build_file_manager(self):
@@ -78,7 +81,7 @@ class MarkdownNotebook(BaseApp):
 
     def _add_new_notebook(self, path):
         try:
-            self.custom_config.add_notebook_path(path)
+            self.config.add_notebook_path(path)
             self._add_notebook_to_list(path)
         except MessageError as e:
             toast(e.message)

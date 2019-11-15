@@ -3,7 +3,6 @@ import sys
 import os
 from kivy.app import App
 from kivy.clock import Clock
-from kivy.config import ConfigParser
 from kivy.core.window import Window
 from kivy.properties import ObjectProperty
 from kivymd.theming import ThemeManager
@@ -27,7 +26,6 @@ class BaseApp(App):
         self.base_screen_name = base_screen_name
         self.list_previous_screens = [base_screen_name]
         self.window = Window
-        self.config = ConfigParser()
         self.manager = None
         self.exit_interval = False
 
@@ -47,9 +45,6 @@ class BaseApp(App):
 
     def get_application_config(self, defaultpath=None):
         return super().get_application_config(os.path.join(self.directory, f'{self.name}.ini'))
-
-    def build_config(self, config):
-        config.adddefaultsection('General')
 
     def events_program(self, instance, keyboard, keycode, text, modifiers):
         """Вызывается при нажатии кнопки Меню или Back Key
