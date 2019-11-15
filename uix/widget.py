@@ -1,4 +1,5 @@
 import os
+from kivy.clock import Clock
 from kivy.factory import Factory
 from kivy.uix.modalview import ModalView
 from kivy.uix.treeview import TreeViewLabel
@@ -49,35 +50,44 @@ class NoteTreeViewLabel(TreeViewLabel):
 
 
 class LongpressMixin:
-    __events__ = ('on_long_press', )
+    __events__ = ('on_long_press', 'on_short_press')
 
     long_press_time = Factory.NumericProperty(1)
 
-    def on_release(self):
-        last_touch = self.last_touch
-        long_press_time = last_touch.time_end - last_touch.time_start
-        if long_press_time > self.long_press_time:
-            self._do_long_press(long_press_time)
+    def on_state(self, instance, value):
+        if value == 'down':
+            self._clockev = Clock.schedule_once(self._do_long_press, self.long_press_time)
+        else:
+            if self._clockev.is_triggered == 1:
+                self.dispatch('on_short_press')
+            self._clockev.cancel()
 
     def _do_long_press(self, long_press_time):
         self.dispatch('on_long_press', long_press_time)
 
     def on_long_press(self, long_press_time):
-        print('long', long_press_time)
+        raise NotImplementedError
+
+    def on_short_press(self):
+        raise NotImplementedError
 
 
 class NotebookListItem(LongpressMixin, TwoLineListItem):
-    def __init__(self, remove_item_callback, **kwargs):
+    def __init__(self, remove_item_callback, select_item_callback, **kwargs):
         super(NotebookListItem, self).__init__(**kwargs)
         self.remove_item = remove_item_callback
+        self.select_item = select_item_callback
 
     def on_long_press(self, long_press_time):
         MDDialog(
-            title='Title', size_hint=(.8, .3),
+            title='Delete notebook', size_hint=(.8, .3),
             text_button_ok='Yes', text_button_cancel='No',
             text=f'Are you sure to delete "{self.secondary_text}" notebook?',
             events_callback=self.dialog_callback
         ).open()
+
+    def on_short_press(self):
+        self.select_item(self.secondary_text)
 
     def dialog_callback(self, value, dialog):
         if value == 'Yes':
@@ -89,9 +99,9 @@ class NotebookListItem(LongpressMixin, TwoLineListItem):
 
 class NotebooksSelectorModalView(ModalView):
     class FileManager(MDFileManager):
-        def __init__(self, add_notebook, **kwargs):
+        def __init__(self, root_path, add_notebook, **kwargs):
             super().__init__(**kwargs)
-            self.current_path = '/home/phpusr'
+            self.current_path = root_path
             self.add_notebook = add_notebook
 
         def show(self, path=None):
@@ -113,8 +123,9 @@ class NotebooksSelectorModalView(ModalView):
     def __init__(self):
         super().__init__(size_hint=(1, 1), auto_dismiss=False)
 
-    def build(self, add_notebook):
+    def build(self, root_path, add_notebook):
         self.file_manager = NotebooksSelectorModalView.FileManager(
+            root_path=root_path,
             exit_manager=self.exit_manager,
             add_notebook=add_notebook
         )

@@ -1,10 +1,9 @@
-import sys
-
 import os
 from kivy.properties import ObjectProperty
 from kivymd.toast import toast
 from kivymd.uix.dialog import MDDialog
 from markdown_tree_parser.parser import parse_file
+from pathlib import Path
 
 from libs.base import BaseApp
 from libs.config import MarkdownNotebookConfig
@@ -39,17 +38,11 @@ class MarkdownNotebook(BaseApp):
         self.note_title = self.screen.ids.note_title
         self.note_editor = self.screen.ids.note_editor
 
-        self.notebooks_selector.build(add_notebook=self._add_new_notebook)
-        self._build_file_manager()
+        self.notebooks_selector.build(root_path=str(Path.home()), add_notebook=self._add_new_notebook)
         self.note_tree.bind(minimum_height=self.note_tree.setter('height'))
         self.note_editor.bind(minimum_height=self.note_editor.setter('height'))
 
         self._fill_notebooks_from_config()
-
-        # TODO temp
-        if not True:
-            self._select_note_heading(list(self.note_tree.iterate_all_nodes())[4])
-            self._open_note_editor()
 
         return self.screen
 
@@ -58,25 +51,29 @@ class MarkdownNotebook(BaseApp):
         for path in paths:
             self._add_notebook_to_list(path)
 
+    def _select_notebook(self, path):
+        self._build_file_manager(path)
+        self._open_note_fm()
+
     def _add_notebook_to_list(self, path):
         notebook_name = os.path.basename(path)
         self.screen.ids.notebook_list.add_widget(NotebookListItem(
             text=notebook_name,
             secondary_text=path,
-            remove_item_callback=self._remove_notebook
+            remove_item_callback=self._remove_notebook,
+            select_item_callback=self._select_notebook
         ))
 
     def _remove_notebook(self, widget, path):
         self.config.remove_notebook_path(path)
         self.screen.ids.notebook_list.remove_widget(widget)
 
-    def _build_file_manager(self):
+    def _build_file_manager(self, path):
         self.file_manager = FileManager(
-            root_path='/home/phpusr/notes',
-            select_file_callback=self._open_note_tree,
-            exit_manager_callback=lambda: sys.exit(0)
+            root_path=path,
+            select_file_callback=self._open_note_tree
         )
-        self.screen.ids['fm'].add_widget(self.file_manager)
+        self.screen.ids.fm.add_widget(self.file_manager)
         self.file_manager.show_root()
 
     def _add_new_notebook(self, path):
@@ -115,6 +112,9 @@ class MarkdownNotebook(BaseApp):
     def _select_note_heading(self, node):
         self._current_note = node.note
         self._open_note_viewer()
+
+    def _open_note_fm(self):
+        self.manager.current = 'fm_screen'
 
     def _open_note_viewer(self):
         self.note_viewer.text = self._current_note.full_source
