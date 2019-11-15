@@ -8,13 +8,15 @@ from pathlib import Path
 from libs.base import BaseApp
 from libs.config import MarkdownNotebookConfig
 from libs.error import MessageError
-from uix.widget import FileManager, NoteTreeViewLabel, NotebooksSelectorModalView, NotebookListItem
+from uix.widget import NoteTreeViewLabel, NotebookSelectorModalView, NotebookListItem, \
+    NoteSelectorModalView
 
 
 class MarkdownNotebook(BaseApp):
     title = 'Markdown Notebook'
 
-    notebooks_selector = NotebooksSelectorModalView()
+    notebook_selector = NotebookSelectorModalView()
+    note_selector = NoteSelectorModalView()
     note_tree = ObjectProperty()
     note_viewer = ObjectProperty()
     note_title = ObjectProperty()
@@ -38,7 +40,8 @@ class MarkdownNotebook(BaseApp):
         self.note_title = self.screen.ids.note_title
         self.note_editor = self.screen.ids.note_editor
 
-        self.notebooks_selector.build(root_path=str(Path.home()), add_notebook=self._add_new_notebook)
+        self.notebook_selector.build(root_path=str(Path.home()), add_notebook_callback=self._add_new_notebook)
+        self.note_selector.build(select_notebook_callback=self._open_note_tree)
         self.note_tree.bind(minimum_height=self.note_tree.setter('height'))
         self.note_editor.bind(minimum_height=self.note_editor.setter('height'))
 
@@ -51,30 +54,18 @@ class MarkdownNotebook(BaseApp):
         for path in paths:
             self._add_notebook_to_list(path)
 
-    def _select_notebook(self, path):
-        self._build_file_manager(path)
-        self._open_note_fm()
-
     def _add_notebook_to_list(self, path):
         notebook_name = os.path.basename(path)
         self.screen.ids.notebook_list.add_widget(NotebookListItem(
             text=notebook_name,
             secondary_text=path,
             remove_item_callback=self._remove_notebook,
-            select_item_callback=self._select_notebook
+            select_item_callback=self.note_selector.open
         ))
 
     def _remove_notebook(self, widget, path):
         self.config.remove_notebook_path(path)
         self.screen.ids.notebook_list.remove_widget(widget)
-
-    def _build_file_manager(self, path):
-        self.file_manager = FileManager(
-            root_path=path,
-            select_file_callback=self._open_note_tree
-        )
-        self.screen.ids.fm.add_widget(self.file_manager)
-        self.file_manager.show_root()
 
     def _add_new_notebook(self, path):
         try:
@@ -113,9 +104,6 @@ class MarkdownNotebook(BaseApp):
         self._current_note = node.note
         self._open_note_viewer()
 
-    def _open_note_fm(self):
-        self.manager.current = 'fm_screen'
-
     def _open_note_viewer(self):
         self.note_viewer.text = self._current_note.full_source
         self.manager.current = 'note_viewer_screen'
@@ -142,8 +130,8 @@ class MarkdownNotebook(BaseApp):
         elif manager.current == 'note_viewer_screen':
             self._open_note_tree(self._current_note_file_path)
         elif manager.current == 'note_tree_screen':
-            manager.current = 'fm_screen'
-            self.file_manager.refresh()
+            self.note_selector.open()
+            self.manager.current = 'notebooks_screen'
             self.screen.ids.action_bar.left_action_items = [
                 ['menu', lambda x: self.screen.ids.nav_drawer._toggle()]
             ]

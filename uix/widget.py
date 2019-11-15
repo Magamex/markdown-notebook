@@ -9,37 +9,51 @@ from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.list import TwoLineListItem
 
 
-class FileManager(MDFileManager):
+class NoteSelectorModalView(ModalView):
+    class FileManager(MDFileManager):
+        def __init__(self, select_file_callback, **kwargs):
+            super().__init__(**kwargs)
+            self.select_file_callback = select_file_callback
 
-    def __init__(self, root_path, select_file_callback, exit_manager_callback):
-        super().__init__(previous=False)
-        self.root_path = root_path
-        self.select_file_callback = select_file_callback
-        self.exit_manager_callback = exit_manager_callback
+        def show_root(self, path=None):
+            if path is not None:
+                self.history = []
+                self.show(path)
 
-    def show_root(self):
-        self.show(self.root_path)
+        def select_dir_or_file(self, path):
+            if os.path.isfile(path):
+                self.select_path(path)
+                return
 
-    def select_path(self, path):
-        self.select_file_callback(path)
+            self.current_path = path
+            self.show(path)
 
-    def select_dir_or_file(self, path):
-        if os.path.isfile(path):
-            self.select_path(path)
-            return
+        def select_path(self, path):
+            self.select_file_callback(path)
+            self.exit_manager(1)
 
-        self.current_path = path
-        self.show(path)
+        def back(self):
+            if len(self.history) == 1:
+                self.exit_manager(1)
+            else:
+                super().back()
 
-    def back(self):
-        if self.current_path != self.root_path:
-            super().back()
+    def __init__(self):
+        super().__init__(size_hint=(1, 1), auto_dismiss=False)
 
-    def exit_manager(self, _):
-        self.exit_manager_callback()
+    def build(self, select_notebook_callback):
+        self.file_manager = NoteSelectorModalView.FileManager(
+            exit_manager=self._exit_manager_callback,
+            select_file_callback=select_notebook_callback
+        )
+        self.add_widget(self.file_manager)
 
-    def refresh(self):
-        self.show(self.current_path)
+    def _exit_manager_callback(self, _):
+        self.dismiss()
+
+    def open(self, path=None):
+        super().open()
+        self.file_manager.show_root(path)
 
 
 class NoteTreeViewLabel(TreeViewLabel):
@@ -97,12 +111,12 @@ class NotebookListItem(LongpressMixin, TwoLineListItem):
         pass
 
 
-class NotebooksSelectorModalView(ModalView):
+class NotebookSelectorModalView(ModalView):
     class FileManager(MDFileManager):
-        def __init__(self, root_path, add_notebook, **kwargs):
+        def __init__(self, root_path, select_path_callback, **kwargs):
             super().__init__(**kwargs)
             self.current_path = root_path
-            self.add_notebook = add_notebook
+            self.select_path_callback = select_path_callback
 
         def show(self, path=None):
             if path is None:
@@ -117,17 +131,17 @@ class NotebooksSelectorModalView(ModalView):
             self.show(path)
 
         def select_path(self, path):
-            self.add_notebook(path)
+            self.select_path_callback(path)
             self.exit_manager(1)
 
     def __init__(self):
         super().__init__(size_hint=(1, 1), auto_dismiss=False)
 
-    def build(self, root_path, add_notebook):
-        self.file_manager = NotebooksSelectorModalView.FileManager(
+    def build(self, root_path, add_notebook_callback):
+        self.file_manager = NotebookSelectorModalView.FileManager(
             root_path=root_path,
-            exit_manager=self.exit_manager,
-            add_notebook=add_notebook
+            exit_manager=self._exit_manager_callback,
+            select_path_callback=add_notebook_callback
         )
         self.add_widget(self.file_manager)
 
@@ -135,6 +149,6 @@ class NotebooksSelectorModalView(ModalView):
         super().open()
         self.file_manager.show()
 
-    def exit_manager(self, _):
+    def _exit_manager_callback(self, _):
         self.dismiss()
 

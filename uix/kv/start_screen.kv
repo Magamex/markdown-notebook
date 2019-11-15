@@ -37,13 +37,7 @@
                         md_bg_color: app.theme_cls.primary_color
                         x: Window.width - self.width - dp(10)
                         y: dp(10)
-                        on_release: app.notebooks_selector.open()
-
-
-                Screen:
-                    name: 'fm_screen'
-                    FloatLayout:
-                        id: fm
+                        on_release: app.notebook_selector.open()
 
                 Screen:
                     name: 'note_tree_screen'
