@@ -41,11 +41,12 @@ class MarkdownNotebook(BaseApp):
         self.note_editor = self.screen.ids.note_editor
 
         self.notebook_selector.build(root_path=str(Path.home()), add_notebook_callback=self._add_new_notebook)
-        self.note_selector.build(select_notebook_callback=self._open_note_tree)
+        self.note_selector.build(select_note_callback=self._open_note_tree)
         self.note_tree.bind(minimum_height=self.note_tree.setter('height'))
         self.note_editor.bind(minimum_height=self.note_editor.setter('height'))
 
         self._fill_notebooks_from_config()
+        self._show_screen()
 
         return self.screen
 
@@ -54,18 +55,28 @@ class MarkdownNotebook(BaseApp):
         for path in paths:
             self._add_notebook_to_list(path)
 
+    def _show_screen(self):
+        current_note = self.config.current_note
+        if current_note is not None:
+            self._open_note_tree(current_note)
+            self.note_selector.file_manager.current_path = os.path.dirname(current_note)
+
     def _add_notebook_to_list(self, path):
         notebook_name = os.path.basename(path)
         self.screen.ids.notebook_list.add_widget(NotebookListItem(
             text=notebook_name,
             secondary_text=path,
             remove_item_callback=self._remove_notebook,
-            select_item_callback=self.note_selector.open
+            select_item_callback=self._select_notebook
         ))
 
     def _remove_notebook(self, widget, path):
         self.config.remove_notebook_path(path)
         self.screen.ids.notebook_list.remove_widget(widget)
+
+    def _select_notebook(self, path):
+        self.config.set_current_notebook(path)
+        self.note_selector.open(path)
 
     def _add_new_notebook(self, path):
         try:
@@ -75,6 +86,7 @@ class MarkdownNotebook(BaseApp):
             toast(e.message)
 
     def _open_note_tree(self, note_file_path):
+        self.config.set_current_note(note_file_path)
         self._current_note_file_path = note_file_path
         self._current_note_file_name = os.path.basename(note_file_path)
         self._fill_tree_view(note_file_path)

@@ -2,6 +2,8 @@ from libs.error import MessageError
 
 GENERAL_SECTION = 'General'
 NOTEBOOKS_OPTION = 'notebooks'
+CURRENT_NOTEBOOK_OPTION = 'current_notebook'
+CURRENT_NOTE_OPTION = 'current_note'
 SPLITTER = ';'
 
 
@@ -30,3 +32,19 @@ class MarkdownNotebookConfig:
             paths.remove(path)
             self.config.set(GENERAL_SECTION, NOTEBOOKS_OPTION, SPLITTER.join(paths))
             self.config.write()
+
+    @property
+    def current_notebook(self):
+        return self.config.getdefault(GENERAL_SECTION, CURRENT_NOTEBOOK_OPTION, None)
+
+    def set_current_notebook(self, notebook_path):
+        self.config.set(GENERAL_SECTION, CURRENT_NOTEBOOK_OPTION, notebook_path)
+        self.config.write()
+
+    @property
+    def current_note(self):
+        return self.config.getdefault(GENERAL_SECTION, CURRENT_NOTE_OPTION, None)
+
+    def set_current_note(self, note_path):
+        self.config.set(GENERAL_SECTION, CURRENT_NOTE_OPTION, note_path)
+        self.config.write()

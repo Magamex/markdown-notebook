@@ -19,6 +19,10 @@ class NoteSelectorModalView(ModalView):
             if path is not None:
                 self.history = []
                 self.show(path)
+            else:
+                if self.current_path in self.history:
+                    self.history.remove(self.current_path)
+                self.show(self.current_path)
 
         def select_dir_or_file(self, path):
             if os.path.isfile(path):
@@ -41,10 +45,10 @@ class NoteSelectorModalView(ModalView):
     def __init__(self):
         super().__init__(size_hint=(1, 1), auto_dismiss=False)
 
-    def build(self, select_notebook_callback):
+    def build(self, select_note_callback):
         self.file_manager = NoteSelectorModalView.FileManager(
             exit_manager=self._exit_manager_callback,
-            select_file_callback=select_notebook_callback
+            select_file_callback=select_note_callback
         )
         self.add_widget(self.file_manager)
 
