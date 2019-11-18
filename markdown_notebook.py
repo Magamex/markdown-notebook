@@ -104,9 +104,9 @@ class MarkdownNotebook(BaseApp):
     def _populate_tree_view(self, node, parent=None):
         if parent is None:
             if node.main is not None:
-                tree_node = self.note_tree.add_node(NoteTreeViewLabel(node.main, is_open=True))
+                tree_node = self.note_tree.add_node(NoteTreeViewLabel(node.main, is_open=True, color=(0, 0, 0, 1)))
         else:
-            tree_node = self.note_tree.add_node(NoteTreeViewLabel(node, is_open=False), parent)
+            tree_node = self.note_tree.add_node(NoteTreeViewLabel(node, is_open=False, color=(0, 0, 0, 1)), parent)
 
         for child_node in node:
             self._populate_tree_view(child_node, tree_node)

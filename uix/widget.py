@@ -63,7 +63,7 @@ class NoteSelectorModalView(ModalView):
 class NoteTreeViewLabel(TreeViewLabel):
 
     def __init__(self, note, **kwargs):
-        super().__init__(text=note.text, **kwargs)
+        super().__init__(text=note.text, font_size='15dp', padding=(15, 15), **kwargs)
         self.note = note
 
 
