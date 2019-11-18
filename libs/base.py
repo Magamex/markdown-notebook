@@ -70,9 +70,9 @@ class BaseApp(App):
             self.manager.current = self.list_previous_screens.pop()
         except:
             self.manager.current = self.base_screen_name
+
         self.screen.ids.action_bar.title = self.title
-        self.screen.ids.action_bar.left_action_items = \
-            [['menu', lambda x: self.nav_drawer._toggle()]]
+        self.screen.ids.action_bar.left_action_items = [['menu', lambda x: self.nav_drawer._toggle()]]
 
     def dialog_exit(self):
         def check_interval_press(interval):

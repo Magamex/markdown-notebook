@@ -89,6 +89,7 @@ class MarkdownNotebook(BaseApp):
 
     def _open_note_tree(self, note_file_path):
         self.config.set_current_note(note_file_path)
+        self.screen.ids.action_bar.title = os.path.basename(note_file_path)
         self._current_note_file_path = note_file_path
         self._current_note_file_name = os.path.basename(note_file_path)
         self._fill_tree_view(note_file_path)
@@ -149,6 +150,7 @@ class MarkdownNotebook(BaseApp):
             super().back_screen()
 
     def _open_notebooks_screen(self):
+        self.screen.ids.action_bar.title = self.title
         self.manager.current = 'notebooks_screen'
         self.note_selector.open()
         self.screen.ids.action_bar.left_action_items = [
