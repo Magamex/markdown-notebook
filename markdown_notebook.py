@@ -46,20 +46,22 @@ class MarkdownNotebook(BaseApp):
         self.note_editor.bind(minimum_height=self.note_editor.setter('height'))
 
         self._fill_notebooks_from_config()
-        self._show_screen()
 
         return self.screen
+
+    def on_start(self):
+        current_note = self.config.current_note
+        current_notebook = self.config.current_notebook
+        if current_note is not None:
+            self._open_note_tree(current_note)
+            self.note_selector.file_manager.current_path = os.path.dirname(current_note)
+        elif current_notebook is not None:
+            self.note_selector.open(current_notebook)
 
     def _fill_notebooks_from_config(self):
         paths = self.config.notebook_paths
         for path in paths:
             self._add_notebook_to_list(path)
-
-    def _show_screen(self):
-        current_note = self.config.current_note
-        if current_note is not None:
-            self._open_note_tree(current_note)
-            self.note_selector.file_manager.current_path = os.path.dirname(current_note)
 
     def _add_notebook_to_list(self, path):
         notebook_name = os.path.basename(path)
@@ -142,13 +144,16 @@ class MarkdownNotebook(BaseApp):
         elif manager.current == 'note_viewer_screen':
             self._open_note_tree(self._current_note_file_path)
         elif manager.current == 'note_tree_screen':
-            self.note_selector.open()
-            self.manager.current = 'notebooks_screen'
-            self.screen.ids.action_bar.left_action_items = [
-                ['menu', lambda x: self.screen.ids.nav_drawer._toggle()]
-            ]
+            self._open_notebooks_screen()
         else:
             super().back_screen()
+
+    def _open_notebooks_screen(self):
+        self.manager.current = 'notebooks_screen'
+        self.note_selector.open()
+        self.screen.ids.action_bar.left_action_items = [
+            ['menu', lambda x: self.screen.ids.nav_drawer._toggle()]
+        ]
 
     def _confirm_save_note(self):
         if self.note_title.text == self._current_note.text \
