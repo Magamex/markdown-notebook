@@ -22,14 +22,14 @@ class NoteSelectorModalView(ModalView):
 
         def select_dir_or_file(self, path):
             if os.path.isfile(path):
-                self.select_path(path)
+                self.select_file_callback(path)
+                self.exit_manager(1)
                 return
 
             self.current_path = path
             self.show(path)
 
         def select_path(self, path):
-            self.select_file_callback(path)
             self.exit_manager(1)
 
         def back(self):
