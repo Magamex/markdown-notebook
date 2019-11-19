@@ -12,7 +12,6 @@
 
         BoxLayout:
             orientation: 'vertical'
-            spacing: dp(5)
 
             MDToolbar:
                 id: action_bar
@@ -41,12 +40,6 @@
 
                 Screen:
                     name: 'note_tree_screen'
-                    canvas.before:
-                        Color:
-                            rgba: app.theme_cls.bg_normal
-                        Rectangle:
-                            pos: self.pos
-                            size: self.size
                     ScrollView:
                         TreeView:
                             id: note_tree
