@@ -30,10 +30,11 @@
             size_hint_y: .3
 
             canvas.before:
+                Color:
+                    rgba: app.theme_cls.primary_color
                 Rectangle:
                     pos: self.pos
                     size: self.size
-                    source: 'data/images/navigation_bg.png'
 
             Image:
                 id: navigation_image
@@ -57,6 +58,13 @@
             id: scroll
             size_hint_y: .7
 
+            canvas.before:
+                Color:
+                    rgba: app.theme_cls.bg_normal
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
             GridLayout:
                 cols: 1
                 size_hint_y: None
@@ -65,6 +73,7 @@
 
                 LabelSection:
                     text:  'Menu'
+                    color: app.theme_cls.text_color
                     events_callback: lambda x: x
 
                 SingleIconItem:
