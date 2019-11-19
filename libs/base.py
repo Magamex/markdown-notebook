@@ -61,7 +61,7 @@ class BaseApp(App):
         if keyboard in (1001, 27):
             if self.nav_drawer.state == 'open':
                 self.nav_drawer.toggle_nav_drawer()
-                self.back_screen()
+            self.back_screen()
         elif keyboard in (282, 319):
             pass
 
