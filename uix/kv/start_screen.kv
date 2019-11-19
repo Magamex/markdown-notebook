@@ -63,6 +63,13 @@
                     name: 'note_editor_screen'
                     BoxLayout:
                         orientation: 'vertical'
+                        padding: 20, 20
+                        canvas.before:
+                            Color:
+                                rgba: 1, 1, 1, 0.8
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
                         MDTextField:
                             id: note_title
                             hint_text: 'Heading text'
