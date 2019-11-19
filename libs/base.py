@@ -8,8 +8,10 @@ from kivy.properties import ObjectProperty
 from kivymd.theming import ThemeManager
 from kivymd.toast import toast
 
+from libs.config import MarkdownNotebookConfig
 from main import __version__ as app_version
 from uix.start_screen import StartScreen
+from uix.widget import ThemePicker
 
 
 class BaseApp(App):
@@ -29,11 +31,17 @@ class BaseApp(App):
         self.manager = None
         self.exit_interval = False
 
+    def build_config(self, config):
+        self.config = MarkdownNotebookConfig(self.config)
+
     def build(self):
         self.screen = StartScreen()
         self.manager = self.screen.ids.manager
         self.nav_drawer = self.screen.ids.nav_drawer
         self.screen.ids.about_screen.build(app_version, self.theme_cls.primary_color)
+
+        self.config.load_theme(self.theme_cls)
+        self.theme_picker = ThemePicker(self.config, self.theme_cls)
 
         return self.screen
 
@@ -86,3 +94,6 @@ class BaseApp(App):
 
         Clock.schedule_interval(check_interval_press, 1)
         toast('Press Back to Exit')
+
+    def theme_picker_open(self, *args):
+        self.theme_picker.open()

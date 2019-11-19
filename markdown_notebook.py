@@ -6,7 +6,6 @@ from markdown_tree_parser.parser import parse_file
 from pathlib import Path
 
 from libs.base import BaseApp
-from libs.config import MarkdownNotebookConfig
 from libs.error import MessageError
 from uix.widget import NoteTreeViewLabel, NotebookSelectorModalView, NotebookListItem, \
     NoteSelectorModalView
@@ -28,10 +27,6 @@ class MarkdownNotebook(BaseApp):
 
     def __init__(self):
         super().__init__('fm_screen')
-
-    def build_config(self, config):
-        config.adddefaultsection('General')
-        self.config = MarkdownNotebookConfig(self.config)
 
     def build(self):
         super().build()
@@ -104,9 +99,11 @@ class MarkdownNotebook(BaseApp):
     def _populate_tree_view(self, node, parent=None):
         if parent is None:
             if node.main is not None:
-                tree_node = self.note_tree.add_node(NoteTreeViewLabel(node.main, is_open=True, color=(0, 0, 0, 1)))
+                tree_node = self.note_tree.add_node(NoteTreeViewLabel(node.main, is_open=True,
+                                                                      color=self.theme_cls.text_color))
         else:
-            tree_node = self.note_tree.add_node(NoteTreeViewLabel(node, is_open=False, color=(0, 0, 0, 1)), parent)
+            tree_node = self.note_tree.add_node(NoteTreeViewLabel(node, is_open=False, color=self.theme_cls.text_color),
+                                                parent)
 
         for child_node in node:
             self._populate_tree_view(child_node, tree_node)

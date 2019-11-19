@@ -7,6 +7,7 @@ from kivymd.uix.dialog import MDDialog
 
 from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.list import TwoLineListItem
+from kivymd.uix.picker import MDThemePicker
 
 
 class NoteSelectorModalView(ModalView):
@@ -155,4 +156,15 @@ class NotebookSelectorModalView(ModalView):
 
     def _exit_manager_callback(self, _):
         self.dismiss()
+
+
+class ThemePicker(MDThemePicker):
+    def __init__(self, config, theme_cls):
+        super().__init__()
+        self.config = config
+        self.theme_cls = theme_cls
+
+    def dismiss(self):
+        self.config.set_theme(self.theme_cls)
+        super().dismiss()
 
