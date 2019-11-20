@@ -1,10 +1,6 @@
 <AboutScreen>:
     FloatLayout:
 
-        Image:
-            source: 'icon.png'
-            opacity: .4
-
         BoxLayout:
             id: box
             orientation: 'vertical'
@@ -17,7 +13,7 @@
                 id: label
                 font_size: '14sp'
                 bold: True
-                color: 0, 0, 0, 1
+                color: app.theme_cls.text_color
                 markup: True
                 halign: 'center'
                 on_ref_press: root.open_url(*args)
