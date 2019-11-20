@@ -10,7 +10,20 @@ from kivymd.uix.list import TwoLineListItem
 from kivymd.uix.picker import MDThemePicker
 
 
-class NoteSelectorModalView(ModalView):
+class BaseModalView(ModalView):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.is_open = False
+
+    def on_open(self):
+        self.is_open = True
+
+    def on_dismiss(self):
+        self.is_open = False
+
+
+class NoteSelectorModalView(BaseModalView):
     class FileManager(MDFileManager):
         def __init__(self, select_file_callback, **kwargs):
             super().__init__(**kwargs)
@@ -47,18 +60,18 @@ class NoteSelectorModalView(ModalView):
         super().__init__(size_hint=(1, 1), auto_dismiss=False)
 
     def build(self, select_note_callback):
-        self.file_manager = NoteSelectorModalView.FileManager(
+        self.fm = NoteSelectorModalView.FileManager(
             exit_manager=self._exit_manager_callback,
             select_file_callback=select_note_callback
         )
-        self.add_widget(self.file_manager)
+        self.add_widget(self.fm)
 
     def _exit_manager_callback(self, _):
         self.dismiss()
 
     def open(self, path=None):
         super().open()
-        self.file_manager.show_root(path)
+        self.fm.show_root(path)
 
 
 class NoteTreeViewLabel(TreeViewLabel):
@@ -116,7 +129,7 @@ class NotebookListItem(LongpressMixin, TwoLineListItem):
         pass
 
 
-class NotebookSelectorModalView(ModalView):
+class NotebookSelectorModalView(BaseModalView):
     class FileManager(MDFileManager):
         def __init__(self, root_path, select_path_callback, **kwargs):
             super().__init__(**kwargs)
@@ -143,16 +156,16 @@ class NotebookSelectorModalView(ModalView):
         super().__init__(size_hint=(1, 1), auto_dismiss=False)
 
     def build(self, root_path, add_notebook_callback):
-        self.file_manager = NotebookSelectorModalView.FileManager(
+        self.fm = NotebookSelectorModalView.FileManager(
             root_path=root_path,
             exit_manager=self._exit_manager_callback,
             select_path_callback=add_notebook_callback
         )
-        self.add_widget(self.file_manager)
+        self.add_widget(self.fm)
 
     def open(self):
         super().open()
-        self.file_manager.show()
+        self.fm.show()
 
     def _exit_manager_callback(self, _):
         self.dismiss()

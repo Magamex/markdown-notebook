@@ -26,7 +26,7 @@ class MarkdownNotebook(BaseApp):
         return 'markdown_notebook'
 
     def __init__(self):
-        super().__init__('fm_screen')
+        super().__init__('notebooks_screen')
 
     def build(self):
         super().build()
@@ -49,7 +49,7 @@ class MarkdownNotebook(BaseApp):
         current_notebook = self.config.current_notebook
         if current_note is not None:
             self._open_note_tree(current_note)
-            self.note_selector.file_manager.current_path = os.path.dirname(current_note)
+            self.note_selector.fm.current_path = os.path.dirname(current_note)
         elif current_notebook is not None:
             self.note_selector.open(current_notebook)
 
@@ -137,7 +137,12 @@ class MarkdownNotebook(BaseApp):
 
     def back_screen(self):
         manager = self.manager
-        if manager.current == 'note_editor_screen':
+
+        if self.note_selector.is_open:
+            self.note_selector.fm.back()
+        elif self.notebook_selector.is_open:
+            self.notebook_selector.fm.back()
+        elif manager.current == 'note_editor_screen':
             self._open_note_viewer()
         elif manager.current == 'note_viewer_screen':
             self._open_note_tree(self._current_note_file_path)

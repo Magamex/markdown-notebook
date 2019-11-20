@@ -6,7 +6,6 @@ from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.properties import ObjectProperty
 from kivymd.theming import ThemeManager
-from kivymd.toast import toast
 
 from libs.config import MarkdownNotebookConfig
 from main import __version__ as app_version
@@ -55,8 +54,12 @@ class BaseApp(App):
         return super().get_application_config(os.path.join(self.directory, f'{self.name}.ini'))
 
     def events_program(self, instance, keyboard, keycode, text, modifiers):
-        """Вызывается при нажатии кнопки Меню или Back Key
-        на мобильном устройстве."""
+        """
+        27 - Esc
+        1001 - ?
+        282 - ?
+        319 - ?
+        """
 
         if keyboard in (1001, 27):
             if self.nav_drawer.state == 'open':
@@ -68,9 +71,6 @@ class BaseApp(App):
         return True
 
     def back_screen(self):
-        """Менеджер экранов. Вызывается при нажатии Back Key
-        и шеврона "Назад" в ToolBar."""
-
         if self.manager.current == self.base_screen_name:
             self.dialog_exit()
             return
@@ -92,8 +92,7 @@ class BaseApp(App):
         if self.exit_interval:
             sys.exit(0)
 
-        Clock.schedule_interval(check_interval_press, 1)
-        toast('Press Back to Exit')
+        Clock.schedule_interval(check_interval_press, 0.1)
 
     def theme_picker_open(self, *args):
         self.theme_picker.open()
