@@ -75,6 +75,10 @@ class MarkdownNotebook(BaseApp):
         self.screen.ids.notebook_list.remove_widget(widget)
 
     def _select_notebook(self, path):
+        if not os.path.exists(path):
+            toast('Path doesn\'t exists')
+            return
+
         self.config.set_current_notebook(path)
         self.note_selector.open(path)
 
