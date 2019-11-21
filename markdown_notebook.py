@@ -26,7 +26,7 @@ class MarkdownNotebook(BaseApp):
         return 'markdown_notebook'
 
     def __init__(self):
-        super().__init__('notebooks_screen')
+        super().__init__('notebooks_screen', 'Notebooks')
 
     def build(self):
         super().build()
@@ -36,7 +36,8 @@ class MarkdownNotebook(BaseApp):
         self.note_editor = self.screen.ids.note_editor
 
         self.notebook_selector.build(root_path=str(Path.home()), add_notebook_callback=self._add_new_notebook)
-        self.note_selector.build(select_note_callback=self._open_note_tree)
+        self.note_selector.build(select_note_callback=self._open_note_tree,
+                                 on_close_callback=lambda: self.config.set_current_notebook(''))
         self.note_tree.bind(minimum_height=self.note_tree.setter('height'))
         self.note_editor.bind(minimum_height=self.note_editor.setter('height'))
 
@@ -47,11 +48,13 @@ class MarkdownNotebook(BaseApp):
     def on_start(self):
         current_note = self.config.current_note
         current_notebook = self.config.current_notebook
-        if current_note is not None:
+        if current_note is not None and os.path.exists(current_note):
             self._open_note_tree(current_note)
             self.note_selector.fm.current_path = os.path.dirname(current_note)
-        elif current_notebook is not None:
-            self.note_selector.open(current_notebook)
+        elif current_notebook is not None and os.path.exists(current_notebook):
+            self._open_notebook_selector(current_notebook)
+        else:
+            self._open_notebooks_screen()
 
     def _fill_notebooks_from_config(self):
         paths = self.config.notebook_paths
@@ -147,14 +150,18 @@ class MarkdownNotebook(BaseApp):
         elif manager.current == 'note_viewer_screen':
             self._open_note_tree(self._current_note_file_path)
         elif manager.current == 'note_tree_screen':
-            self._open_notebooks_screen()
+            self._open_notebook_selector()
         else:
             super().back_screen()
 
+    def _open_notebook_selector(self, path=None):
+        self.note_selector.open(path)
+        self._open_notebooks_screen()
+
     def _open_notebooks_screen(self):
-        self.screen.ids.action_bar.title = self.title
-        self.manager.current = 'notebooks_screen'
-        self.note_selector.open()
+        self.screen.ids.action_bar.title = self.base_screen_title
+        self.config.set_current_note('')
+        self.manager.current = self.base_screen_name
         self.screen.ids.action_bar.left_action_items = [
             ['menu', lambda x: self.screen.ids.nav_drawer._toggle()]
         ]

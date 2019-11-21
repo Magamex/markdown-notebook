@@ -19,13 +19,14 @@ class BaseApp(App):
     theme_cls = ThemeManager()
     theme_cls.primary_palette = 'Blue'
 
-    def __init__(self, base_screen_name, **kvargs):
+    def __init__(self, base_screen_name, base_screen_title, **kvargs):
         super().__init__(**kvargs)
         Window.bind(on_keyboard=self.events_program)
         Window.soft_input_mode = 'below_target'
 
         self.base_screen_name = base_screen_name
-        self.list_previous_screens = [base_screen_name]
+        self.base_screen_title = base_screen_title
+        self.previous_screens = [base_screen_name]
         self.window = Window
         self.manager = None
         self.exit_interval = False
@@ -45,6 +46,7 @@ class BaseApp(App):
         return self.screen
 
     def show_about(self, *args):
+        self.screen.ids.action_bar.title = 'About'
         self.nav_drawer.toggle_nav_drawer()
         self.manager.current = 'about_screen'
         self.screen.ids.action_bar.left_action_items = \
@@ -75,11 +77,11 @@ class BaseApp(App):
             self.dialog_exit()
             return
         try:
-            self.manager.current = self.list_previous_screens.pop()
+            self.manager.current = self.previous_screens.pop()
         except:
             self.manager.current = self.base_screen_name
 
-        self.screen.ids.action_bar.title = self.title
+        self.screen.ids.action_bar.title = self.base_screen_title
         self.screen.ids.action_bar.left_action_items = [['menu', lambda x: self.nav_drawer._toggle()]]
 
     def dialog_exit(self):

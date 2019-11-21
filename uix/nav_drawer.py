@@ -16,8 +16,8 @@ class NavDrawer(NavigationLayout):
         name_current_screen = self._app.manager.current
         if self.state == 'open':
             try:
-                if self._app.list_previous_screens[-1] == name_current_screen:
+                if self._app.previous_screens[-1] == name_current_screen:
                     return
             except IndexError:
                 pass
-            self._app.list_previous_screens.append(name_current_screen)
+            self._app.previous_screens.append(name_current_screen)

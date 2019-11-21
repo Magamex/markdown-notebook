@@ -41,7 +41,7 @@ class NoteSelectorModalView(BaseModalView):
         def select_dir_or_file(self, path):
             if os.path.isfile(path):
                 self.select_file_callback(path)
-                self.exit_manager(1)
+                self.exit_manager(2)
                 return
 
             self.current_path = path
@@ -59,14 +59,17 @@ class NoteSelectorModalView(BaseModalView):
     def __init__(self):
         super().__init__(size_hint=(1, 1), auto_dismiss=False)
 
-    def build(self, select_note_callback):
+    def build(self, select_note_callback, on_close_callback):
         self.fm = NoteSelectorModalView.FileManager(
             exit_manager=self._exit_manager_callback,
             select_file_callback=select_note_callback
         )
         self.add_widget(self.fm)
+        self._on_close_callback = on_close_callback
 
-    def _exit_manager_callback(self, _):
+    def _exit_manager_callback(self, code):
+        if code == 1:
+            self._on_close_callback()
         self.dismiss()
 
     def open(self, path=None):
