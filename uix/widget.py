@@ -8,6 +8,7 @@ from kivymd.uix.dialog import MDDialog
 from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.list import TwoLineListItem
 from kivymd.uix.picker import MDThemePicker
+from markdown_tree_parser.parser import Out
 
 
 class BaseModalView(ModalView):
@@ -80,7 +81,8 @@ class NoteSelectorModalView(BaseModalView):
 class NoteTreeViewLabel(TreeViewLabel):
 
     def __init__(self, note, **kwargs):
-        super().__init__(text=note.text, font_size='15dp', padding=(15, 15), **kwargs)
+        text = note.title if type(note) == Out else note.text
+        super().__init__(text=text, font_size='15dp', padding=(15, 15), **kwargs)
         self.note = note
 
 

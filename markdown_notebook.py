@@ -2,7 +2,7 @@ import os
 from kivy.properties import ObjectProperty
 from kivymd.toast import toast
 from kivymd.uix.dialog import MDDialog
-from markdown_tree_parser.parser import parse_file
+from markdown_tree_parser.parser import parse_file, Out
 from pathlib import Path
 
 from libs.base import BaseApp
@@ -105,8 +105,8 @@ class MarkdownNotebook(BaseApp):
 
     def _populate_tree_view(self, node, parent=None):
         if parent is None:
-            if node.main is not None:
-                tree_node = self.note_tree.add_node(NoteTreeViewLabel(node.main, is_open=True,
+            if type(node) == Out:
+                tree_node = self.note_tree.add_node(NoteTreeViewLabel(node, is_open=True,
                                                                       color=self.theme_cls.text_color))
         else:
             tree_node = self.note_tree.add_node(NoteTreeViewLabel(node, is_open=False, color=self.theme_cls.text_color),
@@ -129,8 +129,10 @@ class MarkdownNotebook(BaseApp):
         self._set_back_button()
 
     def _open_note_editor(self):
-        self.note_title.text = self._current_note.text
-        self.note_editor.text = self._current_note.source
+        current_note = self._current_note.main if type(self._current_note) == Out else self._current_note
+
+        self.note_title.text = current_note.text
+        self.note_editor.text = current_note.source
         self.note_editor.cursor = (0, 0)
         self.manager.current = 'note_editor_screen'
         self._set_back_button(action=self._confirm_save_note)
@@ -171,8 +173,10 @@ class MarkdownNotebook(BaseApp):
         ]
 
     def _confirm_save_note(self):
-        if self.note_title.text == self._current_note.text \
-                and self.note_editor.text == self._current_note.source:
+        current_note = self._current_note.main if type(self._current_note) == Out else self._current_note
+
+        if self.note_title.text == current_note.text \
+                and self.note_editor.text == current_note.source:
             self.back_screen()
             return
 
