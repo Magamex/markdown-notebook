@@ -8,6 +8,10 @@ Config.set('kivy', 'log_enable', 0)
 __version__ = '0.1'
 
 if __name__ in ('__main__', '__android__'):
-    from markdown_notebook import MarkdownNotebook
-    app = MarkdownNotebook()
-    app.run()
+    try:
+        from markdown_notebook import MarkdownNotebook
+        app = MarkdownNotebook()
+        app.run()
+    except Exception as e:
+        from error_app import ErrorApp
+        ErrorApp(e).run()
