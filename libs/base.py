@@ -66,6 +66,7 @@ class BaseApp(App):
         if keyboard in (1001, 27):
             if self.nav_drawer.state == 'open':
                 self.nav_drawer.toggle_nav_drawer()
+
             self.back_screen()
         elif keyboard in (282, 319):
             pass
@@ -76,6 +77,7 @@ class BaseApp(App):
         if self.manager.current == self.base_screen_name:
             self.dialog_exit()
             return
+
         try:
             self.manager.current = self.previous_screens.pop()
         except:

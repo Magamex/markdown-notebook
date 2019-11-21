@@ -42,6 +42,7 @@ class MarkdownNotebook(BaseApp):
         self.note_editor.bind(minimum_height=self.note_editor.setter('height'))
 
         self._fill_notebooks_from_config()
+        self._current_note_changed = True
 
         return self.screen
 
@@ -94,7 +95,9 @@ class MarkdownNotebook(BaseApp):
         self.screen.ids.action_bar.title = os.path.basename(note_file_path)
         self._current_note_file_path = note_file_path
         self._current_note_file_name = os.path.basename(note_file_path)
-        self._fill_tree_view(note_file_path)
+        if self._current_note_changed:
+            self._fill_tree_view(note_file_path)
+            self._current_note_changed = False
         self.manager.current = 'note_tree_screen'
         self._set_back_button()
 
@@ -135,7 +138,7 @@ class MarkdownNotebook(BaseApp):
         self.note_editor.text = current_note.source
         self.note_editor.cursor = (0, 0)
         self.manager.current = 'note_editor_screen'
-        self._set_back_button(action=self._confirm_save_note)
+        self._set_back_button()
 
     def _set_back_button(self, action=None):
         if action is None:
@@ -152,7 +155,7 @@ class MarkdownNotebook(BaseApp):
         elif self.notebook_selector.is_open:
             self.notebook_selector.fm.back()
         elif manager.current == 'note_editor_screen':
-            self._open_note_viewer()
+            self._confirm_save_note()
         elif manager.current == 'note_viewer_screen':
             self._open_note_tree(self._current_note_file_path)
         elif manager.current == 'note_tree_screen':
@@ -177,7 +180,7 @@ class MarkdownNotebook(BaseApp):
 
         if self.note_title.text == current_note.text \
                 and self.note_editor.text == current_note.source:
-            self.back_screen()
+            self._open_note_viewer()
             return
 
         MDDialog(
@@ -191,10 +194,10 @@ class MarkdownNotebook(BaseApp):
 
     def _confirm_save_note_callback(self, answer, dialog):
         if answer == 'Yes':
+            self._current_note_changed = True
             self._current_note.text = self.note_title.text
             self._current_note.source = self.note_editor.text
             with open(self._current_note_file_path, 'w') as f:
                 f.write(self._current_note.root.full_source)
-                self.back_screen()
-        elif answer == 'No':
-            self.back_screen()
+
+        self._open_note_viewer()
