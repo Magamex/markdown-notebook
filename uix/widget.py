@@ -82,7 +82,7 @@ class NoteTreeViewLabel(TreeViewLabel):
 
     def __init__(self, note, **kwargs):
         text = note.title if type(note) == Out else note.text
-        super().__init__(text=text, font_size='15dp', padding=(15, 15), **kwargs)
+        super().__init__(text=text, font_size='16sp', padding=('25dp', '15dp'), **kwargs)
         self.note = note
 
 
