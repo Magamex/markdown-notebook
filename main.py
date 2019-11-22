@@ -16,10 +16,10 @@ if __name__ in ('__main__', '__android__'):
         from markdown_notebook import MarkdownNotebook
         app = MarkdownNotebook()
         app.run()
-    except Exception as e:
+    except:
         directory = os.path.split(os.path.abspath(sys.argv[0]))[0]
         text_error = traceback.format_exc()
         traceback.print_exc(file=open(os.path.join(directory, 'error.log'), 'w'))
 
-        from error_app import ErrorApp
+        from libs.error_app import ErrorApp
         ErrorApp(text_error).run()
