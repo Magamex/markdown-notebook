@@ -53,7 +53,7 @@ class MarkdownNotebook(BaseApp):
             self._open_note_tree(current_note)
             self.note_selector.fm.current_path = os.path.dirname(current_note)
         elif current_notebook is not None and os.path.exists(current_notebook):
-            self._open_notebook_selector(current_notebook)
+            self._open_note_selector(current_notebook)
         else:
             self._open_notebooks_screen()
 
@@ -167,11 +167,12 @@ class MarkdownNotebook(BaseApp):
         elif manager.current == 'note_viewer_screen':
             self._open_note_tree(self._current_note_file_path)
         elif manager.current == 'note_tree_screen':
-            self._open_notebook_selector()
+            self._open_note_selector()
         else:
             super().back_screen()
 
-    def _open_notebook_selector(self, path=None):
+    def _open_note_selector(self, path=None):
+        self._current_note_changed = True
         self.note_selector.open(path)
         self._open_notebooks_screen()
 
