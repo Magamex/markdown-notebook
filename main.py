@@ -1,4 +1,8 @@
+import sys
+
 import kivy
+import os
+import traceback
 from kivy.config import Config
 
 kivy.require('1.9.2')
@@ -13,5 +17,9 @@ if __name__ in ('__main__', '__android__'):
         app = MarkdownNotebook()
         app.run()
     except Exception as e:
+        directory = os.path.split(os.path.abspath(sys.argv[0]))[0]
+        text_error = traceback.format_exc()
+        traceback.print_exc(file=open(os.path.join(directory, 'error.log'), 'w'))
+
         from error_app import ErrorApp
-        ErrorApp(e).run()
+        ErrorApp(text_error).run()
