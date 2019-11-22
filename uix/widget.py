@@ -4,10 +4,10 @@ from kivy.factory import Factory
 from kivy.uix.modalview import ModalView
 from kivy.uix.treeview import TreeViewLabel
 from kivymd.uix.dialog import MDDialog
-
 from kivymd.uix.filemanager import MDFileManager
 from kivymd.uix.list import TwoLineListItem
 from kivymd.uix.picker import MDThemePicker
+
 from markdown_tree_parser.parser import Out
 
 
@@ -156,6 +156,13 @@ class NotebookSelectorModalView(BaseModalView):
         def select_path(self, path):
             self.select_path_callback(path)
             self.exit_manager(1)
+
+        def back(self):
+            if len(self.history) == 0:
+                self.exit_manager(1)
+                return
+
+            super().back()
 
     def __init__(self):
         super().__init__(size_hint=(1, 1), auto_dismiss=False)

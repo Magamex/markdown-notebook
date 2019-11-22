@@ -2,11 +2,11 @@ import os
 from kivy.properties import ObjectProperty
 from kivymd.toast import toast
 from kivymd.uix.dialog import MDDialog
-from markdown_tree_parser.parser import parse_file, Out
 from pathlib import Path
 
 from libs.base import BaseApp
 from libs.error import MessageError
+from markdown_tree_parser.parser import parse_file, Out
 from uix.widget import NoteTreeViewLabel, NotebookSelectorModalView, NotebookListItem, \
     NoteSelectorModalView
 
@@ -35,7 +35,7 @@ class MarkdownNotebook(BaseApp):
         self.note_title = self.screen.ids.note_title
         self.note_editor = self.screen.ids.note_editor
 
-        self.notebook_selector.build(root_path=str(Path.home()), add_notebook_callback=self._add_new_notebook)
+        self.notebook_selector.build(root_path=self.user_dir, add_notebook_callback=self._add_new_notebook)
         self.note_selector.build(select_note_callback=self._open_note_tree,
                                  on_close_callback=lambda: self.config.set_current_notebook(''))
         self.note_tree.bind(minimum_height=self.note_tree.setter('height'))
@@ -56,6 +56,14 @@ class MarkdownNotebook(BaseApp):
             self._open_notebook_selector(current_notebook)
         else:
             self._open_notebooks_screen()
+
+    @property
+    def user_dir(self):
+        from kivy.utils import platform
+        if platform == 'android':
+            return '/sdcard'
+
+        return str(Path.home())
 
     def _fill_notebooks_from_config(self):
         paths = self.config.notebook_paths
