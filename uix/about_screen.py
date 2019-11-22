@@ -14,10 +14,10 @@ class AboutScreen(Screen):
         project_repo = 'https://github.com/phpusr/markdown-notebook'
 
         self.ids.label.text = f'''
-        [size=20][b]Markdown Notebook[/b][/size]\n\n
+        [size=20sp][b]Markdown Notebook[/b][/size]\n\n
         [b]Version:[/b] {version}\n
         [b]License:[/b] GNU General Public License v3.0\n\n
-        [size=20][b]Developer[/b][/size]\n\n
+        [size=20sp][b]Developer[/b][/size]\n\n
         [ref={author_site}][color={link_color}]phpusr[/color][/ref]\n\n
         [b]Source code:[/b]
         [ref={project_repo}][color={link_color}]GitHub[/color][/ref]
