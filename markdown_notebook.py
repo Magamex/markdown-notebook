@@ -103,11 +103,14 @@ class MarkdownNotebook(BaseApp):
         self.screen.ids.action_bar.title = os.path.basename(note_file_path)
         self._current_note_file_path = note_file_path
         self._current_note_file_name = os.path.basename(note_file_path)
-        if self._current_note_changed:
-            self._fill_tree_view(note_file_path)
-            self._current_note_changed = False
-        self.manager.current = 'note_tree_screen'
-        self._set_back_button()
+        try:
+            if self._current_note_changed:
+                self._fill_tree_view(note_file_path)
+                self._current_note_changed = False
+            self.manager.current = 'note_tree_screen'
+            self._set_back_button()
+        except ValueError as e:
+            toast(f'Error opening file: {self._current_note_file_name}')
 
     def _fill_tree_view(self, note_file_path):
         out = parse_file(note_file_path)
