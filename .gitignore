@@ -1,6 +1,7 @@
 /.idea/
 /.venv/
 /bin/
+/android/
 
 /*.iml
 /error.log

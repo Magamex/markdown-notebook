@@ -1,0 +1,23 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+
+[packages]
+certifi = "==2019.9.11"
+chardet = "==3.0.4"
+docutils = "==0.15.2"
+idna = "==2.8"
+kivy-garden = "==0.1.4"
+kivymd = "==0.102.0"
+markdown-tree-parser = "==0.1"
+requests = "==2.22.0"
+urllib3 = "==1.25.6"
+Kivy = "==1.11.1"
+Pillow = "==6.2.0"
+Pygments = "==2.4.2"
+
+[requires]
+python_version = "3.7"
