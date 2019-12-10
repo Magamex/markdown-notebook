@@ -42,7 +42,7 @@ python3 main.py
 
 Download the ready [APK file](https://github.com/phpusr/markdown-notebook/releases) to phone and install it
 
-#### Variant 2 (Build using docker with buildozer)
+#### Variant 2 (Build using docker container with buildozer)
 
 Edit paths in `buildozer.sh`
 
